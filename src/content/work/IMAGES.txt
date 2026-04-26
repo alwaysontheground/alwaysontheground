@@ -1,0 +1,19 @@
+Hero images — current state
+===========================
+
+Real cover (in /public/images/work/):
+- harreveld.md → harreveld-cover.jpeg
+
+Dummy covers (picsum.photos placeholders, grayscale, 1600x1100):
+- sound-of-broken-glass.md   seed: otg-beirut
+- kurdish-promised-land.md   seed: otg-rojava
+- niemand-toevallig.md       seed: otg-sint-pieterskerk
+- stille-avonden.md          seed: otg-pijp
+- onderwater-achter-dijk.md  seed: otg-zeeland
+- dat-wat-we-niet-zien.md    seed: otg-mauritshuis
+
+Replace each `hero:` URL with a real path under /public/images/work/<slug>.<ext>
+when the actual photo is available. Seeds are stable, so the picsum image stays
+the same on every reload until the URL is swapped.
+
+This file is .txt on purpose so the content-collection glob (**/*.md) ignores it.

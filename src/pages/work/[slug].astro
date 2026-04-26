@@ -1,0 +1,63 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteNav from '../../components/SiteNav.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const all = await getCollection('work');
+  return all.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const typesLabel = entry.data.types.map(cap).join(' · ');
+
+const metaParts: string[] = [];
+if (entry.data.dateline) metaParts.push(entry.data.dateline);
+metaParts.push(String(entry.data.year));
+if (entry.data.client) metaParts.push(entry.data.client);
+const metaLine = metaParts.join(' · ');
+---
+<BaseLayout title={`${entry.data.title} — ontheground`}>
+  <SiteNav />
+
+  <article style="max-width: 1280px; margin: 0 auto; padding: 64px 64px 96px;">
+    <a class="navlink" href="/work" style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 40px;">
+      ← Back to work
+    </a>
+
+    <span class="label label--wide">{typesLabel}</span>
+
+    <h1
+      class="sans"
+      style="font-size: 84px; line-height: 0.98; letter-spacing: -0.035em; font-weight: 500; margin-top: 24px; max-width: 1100px;"
+    >
+      {entry.data.title}<span style="color: var(--accent);">.</span>
+    </h1>
+
+    <div class="dateline" style="margin-top: 28px;">{metaLine}</div>
+
+    <div class="photo" style="aspect-ratio: 16 / 9; margin-top: 56px;">
+      <img src={entry.data.hero} alt={entry.data.title} draggable="false" />
+    </div>
+
+    <p
+      class="serif"
+      style="font-size: 22px; line-height: 1.5; color: var(--ink-2); margin-top: 56px; max-width: 65ch;"
+    >
+      {entry.data.excerpt}
+    </p>
+
+    <div class="serif" style="max-width: 65ch; margin-top: 48px; font-size: 17px; line-height: 1.6;">
+      <Content />
+    </div>
+  </article>
+
+  <Footer />
+</BaseLayout>

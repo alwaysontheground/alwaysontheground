@@ -1,0 +1,93 @@
+---
+import Wordmark from './Wordmark.astro';
+
+const work = [
+  { label: 'Reportage',    href: '/reportage' },
+  { label: 'Podcast',      href: '/podcast' },
+  { label: 'Documentary',  href: '/documentary' },
+  { label: 'Photography',  href: '/photography' },
+  { label: 'Commissioned', href: '/commissioned' },
+];
+const studio = [
+  { label: 'Journal',  href: '/journal' },
+  { label: 'About',    href: '/about' },
+  { label: 'Contact',  href: '/contact' },
+];
+---
+<footer
+  style="
+    background: var(--paper-2);
+    border-top: 1px solid var(--rule);
+    padding: 64px 48px 40px;
+  "
+>
+  <div
+    style="
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    "
+  >
+    <div>
+      <Wordmark size={28} href="/" />
+      <p
+        class="serif"
+        style="margin-top: 16px; color: var(--ink-2); font-size: 15px; line-height: 1.55; max-width: 320px;"
+      >
+        A journalism production house that tells the story from where it happens.
+      </p>
+      <div class="dateline" style="margin-top: 20px;">
+        Rotterdam · est. 2020
+      </div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom: 16px; color: var(--ink-2);">Work</div>
+      <div style="display: grid; gap: 10px;">
+        {work.map((x) => <a class="navlink navlink--small" href={x.href}>{x.label}</a>)}
+      </div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom: 16px; color: var(--ink-2);">Studio</div>
+      <div style="display: grid; gap: 10px;">
+        {studio.map((x) => <a class="navlink navlink--small" href={x.href}>{x.label}</a>)}
+      </div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom: 16px; color: var(--ink-2);">Newsletter</div>
+      <p class="serif" style="font-size: 14px; color: var(--ink-2); line-height: 1.5; margin-bottom: 16px;">
+        One letter a month. What we&rsquo;re working on, what we&rsquo;re hearing, what stays with us.
+      </p>
+      {/* Newsletter form — visual only for now; provider TBD */}
+      <form
+        onsubmit="event.preventDefault();"
+        style="
+          display: grid;
+          grid-template-columns: 1fr auto;
+          border: 1px solid var(--rule-strong);
+          background: var(--paper);
+        "
+      >
+        <input
+          type="email"
+          name="email"
+          placeholder="your@email"
+          class="serif"
+          style="border: none; background: transparent; padding: 12px 14px; font-size: 14px; color: var(--fg); outline: none;"
+        />
+        <button type="submit" class="btn btn--primary btn--sm" style="border-radius: 0; border-width: 0;">
+          Subscribe
+        </button>
+      </form>
+    </div>
+  </div>
+  <hr class="rule" />
+  <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 24px;">
+    <div class="dateline" style="color: var(--ink-3);">
+      © ontheground 2020–2026. All work remains with its makers.
+    </div>
+    <div class="dateline" style="color: var(--ink-3);">
+      alwaysontheground.com
+    </div>
+  </div>
+</footer>

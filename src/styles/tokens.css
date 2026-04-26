@@ -1,0 +1,99 @@
+/* =========================================================
+   ONTHEGROUND — design tokens (v0.4 · Sans + Serif)
+   Single source of truth. Import this first.
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ── TYPE FAMILIES ───────────────────────────────────── */
+  --font-sans:   'Archivo', system-ui, sans-serif;
+  --font-serif:  'Source Serif 4', Georgia, serif;
+  --font-mono:   'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── TYPE SCALE ──────────────────────────────────────── */
+  --fs-xxs: 11px;
+  --fs-xs:  12px;
+  --fs-sm:  14px;
+  --fs-md:  16px;
+  --fs-lg:  18px;
+  --fs-xl:  22px;
+  --fs-h4:  22px;
+  --fs-h3:  28px;
+  --fs-h2:  40px;
+  --fs-h1:  60px;
+  --fs-display:    96px;
+  --fs-display-xl: 160px;
+
+  /* ── LINE HEIGHT ─────────────────────────────────────── */
+  --lh-tight: 0.98;
+  --lh-snug:  1.10;
+  --lh-normal:1.30;
+  --lh-body:  1.55;
+
+  /* ── TRACKING ────────────────────────────────────────── */
+  --ls-label:      0.14em;
+  --ls-label-wide: 0.22em;
+  --ls-display:   -0.035em;
+
+  /* ── SPACING (4-px scale) ────────────────────────────── */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  24px;
+  --s-6:  32px;
+  --s-7:  48px;
+  --s-8:  64px;
+  --s-9:  96px;
+  --s-10: 144px;
+
+  /* ── GRID ────────────────────────────────────────────── */
+  --grid-gutter: 24px;
+  --grid-margin: 48px;
+  --grid-max:    1440px;
+
+  /* ── STROKES ─────────────────────────────────────────── */
+  --stroke-thin:  1px;
+  --stroke-med:   1.5px;
+  --stroke-thick: 2px;
+
+  /* ── COLOR · INK & PAPER (default) ───────────────────── */
+  --paper:   #F4EFE6;
+  --paper-2: #EBE4D6;
+  --paper-3: #DED5C2;
+  --ink:     #1A1714;
+  --ink-2:   #3A332C;
+  --ink-3:   #6B6358;
+  --ink-4:   #A49B8C;
+  --accent:  #B8642B;
+  --accent-2:#8A4A1F;
+  --signal:  #8B2E19;
+  --rule:        #D4CBB8;
+  --rule-strong: #8E8573;
+
+  /* ── SEMANTIC ROLES ──────────────────────────────────── */
+  --bg: var(--paper);
+  --fg: var(--ink);
+
+  /* ── MOBILE-SPECIFIC ─────────────────────────────────── */
+  --tap-min: 44px;        /* minimum tap target */
+  --m-margin: 20px;       /* mobile content margin */
+  --m-radius: 12px;       /* mobile card radius (rare) */
+}
+
+/* Alternate palette · CLAY & STONE — for features and photo-led pages */
+[data-palette="clay"] {
+  --paper:   #EFE6DA;
+  --paper-2: #E2D5C3;
+  --paper-3: #CDBDA6;
+  --ink:     #231A14;
+  --ink-2:   #4A3A2D;
+  --ink-3:   #7A6B5B;
+  --ink-4:   #AA9E8B;
+  --accent:  #A03A1C;
+  --accent-2:#7A2C15;
+  --signal:  #5A1A0B;
+  --rule:        #CABBA3;
+  --rule-strong: #917F68;
+}

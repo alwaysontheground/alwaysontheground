@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Article — example</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../components.css">
+<style>
+  .article { max-width: 780px; margin: 0 auto; padding: 96px 24px; }
+  .article .label { margin-bottom: 28px; }
+  .article h1 {
+    font-family: var(--font-sans); font-weight: 500;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.94; letter-spacing: -0.045em;
+    margin-bottom: 32px;
+  }
+  .article h1 em { font-style: italic; font-family: var(--font-serif); font-weight: 400; }
+  .article .lede {
+    font-family: var(--font-serif); font-size: 24px;
+    line-height: 1.5; color: var(--ink); letter-spacing: -0.005em;
+    margin-bottom: 32px;
+  }
+  .article p {
+    font-family: var(--font-serif); font-size: 17px;
+    line-height: 1.65; color: var(--ink-2); margin: 0 0 24px;
+    text-wrap: pretty;
+  }
+  .article .dropcap::first-letter {
+    float: left; font-family: var(--font-sans);
+    font-size: 96px; line-height: 0.85; font-weight: 500;
+    margin: 6px 12px 0 0; color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<article class="article">
+  <span class="label">Documentary · 52 min · 2024</span>
+  <h1>
+    The Sound of<br/>
+    <em>Broken Glass<span style="color:var(--accent)">.</span></em>
+  </h1>
+  <span class="dateline">Beirut · 33.8938°N 35.5018°E · recorded Feb—Nov 2023</span>
+
+  <p class="lede" style="margin-top: 64px;">
+    Four years after the explosion that tore open the port of Beirut, one street in Mar Mikhael is still learning what the neighbourhood sounds like now.
+  </p>
+
+  <p class="dropcap">
+    We filmed over eight months with three families who live on Armenia Street. A glazier who no longer sleeps. A kindergarten teacher who has learned to teach in a half-light. A brother and sister who were five and seven on 4 August 2020 and who are now, quietly, ten and twelve.
+  </p>
+
+  <p>The film has no narrator. It moves at the speed of its street. It was made slowly, on purpose.</p>
+</article>
+
+</body>
+</html>

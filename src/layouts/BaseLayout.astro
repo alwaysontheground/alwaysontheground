@@ -1,0 +1,29 @@
+---
+import '../styles/tokens.css';
+import '../styles/components.css';
+import '../styles/site.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  palette?: 'ink' | 'clay';
+}
+
+const {
+  title,
+  description = 'A journalism production house that tells the story from where it happens. Rotterdam, est. 2020.',
+  palette = 'ink',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en" data-palette={palette}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Mobile shell — example</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../components.css">
+<style>
+  body { background: var(--paper); }
+  .shell {
+    max-width: 480px; margin: 0 auto;
+    min-height: 100vh; display: flex; flex-direction: column;
+    background: var(--paper);
+  }
+  .shell-top {
+    padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--rule);
+  }
+  .shell-top .brand {
+    font-family: var(--font-sans); font-size: 22px; font-weight: 600; letter-spacing: -0.035em;
+  }
+  .shell-body { flex: 1; padding: 32px 20px; }
+  .shell-body h1 {
+    font-family: var(--font-sans); font-weight: 500;
+    font-size: 44px; line-height: 0.96; letter-spacing: -0.035em;
+    margin: 16px 0 0;
+  }
+  .shell-body h1 em { font-style: italic; font-family: var(--font-serif); font-weight: 400; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <header class="shell-top">
+    <div class="brand">ontheground<span style="color:var(--accent)">.</span></div>
+    <button class="btn btn--ghost btn--sm">Menu</button>
+  </header>
+
+  <main class="shell-body">
+    <span class="dateline">Featured · This month</span>
+    <h1>We believe in telling <em>true stories<span style="color:var(--accent)">.</span></em></h1>
+    <p style="margin-top:24px;font-family:var(--font-serif);font-size:17px;line-height:1.55;color:var(--ink-2)">
+      Slow journalism, on the ground. Documentary, podcast, photography.
+    </p>
+    <button class="btn btn--primary" style="margin-top:24px">Open story →</button>
+  </main>
+
+  <nav class="m-tabbar">
+    <button aria-current="true"><span>Home</span></button>
+    <button><span>Index</span></button>
+    <button><span>Saved</span></button>
+    <button><span>About</span></button>
+  </nav>
+</div>
+
+</body>
+</html>

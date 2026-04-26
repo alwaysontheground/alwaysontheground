@@ -1,0 +1,19 @@
+---
+interface Props {
+  size?: number;
+  weight?: number;
+  showDot?: boolean;
+  href?: string;
+}
+const { size = 20, weight = 700, showDot = true, href } = Astro.props;
+const style = `font-size: ${size}px; font-weight: ${weight};`;
+---
+{href ? (
+  <a href={href} class="wm" style={style}>
+    ontheground{showDot && <span class="dot">.</span>}
+  </a>
+) : (
+  <span class="wm" style={style}>
+    ontheground{showDot && <span class="dot">.</span>}
+  </span>
+)}

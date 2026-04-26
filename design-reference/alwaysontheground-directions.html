@@ -1,0 +1,2785 @@
+<!doctype html>
+<html lang="en" data-palette="ink">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>alwaysontheground.com — design directions</title>
+<style>
+/* =========================================================
+   alwaysontheground.com — site styles
+   Based on Ontheground Design System v0.4 (Sans + Serif)
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --font-sans: 'Archivo', system-ui, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --fs-xxs: 11px; --fs-xs: 12px; --fs-sm: 14px; --fs-md: 16px;
+  --fs-lg: 18px; --fs-xl: 22px;
+  --fs-h4: 22px; --fs-h3: 28px; --fs-h2: 40px; --fs-h1: 60px;
+  --fs-display: 96px; --fs-display-xl: 160px;
+
+  --lh-tight: 0.98; --lh-snug: 1.1; --lh-normal: 1.3; --lh-body: 1.55;
+  --ls-label: 0.14em; --ls-label-wide: 0.22em; --ls-display: -0.035em;
+
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px;
+  --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 144px;
+
+  --grid-gutter: 24px; --grid-margin: 48px; --grid-max: 1440px;
+
+  --stroke-thin: 1px; --stroke-med: 1.5px; --stroke-thick: 2px;
+
+  /* Ink & Paper */
+  --paper: #F4EFE6; --paper-2: #EBE4D6; --paper-3: #DED5C2;
+  --ink: #1A1714; --ink-2: #3A332C; --ink-3: #6B6358; --ink-4: #A49B8C;
+  --accent: #B8642B; --accent-2: #8A4A1F; --signal: #8B2E19;
+  --bg: var(--paper); --fg: var(--ink);
+  --rule: #D4CBB8; --rule-strong: #8E8573;
+}
+[data-palette="clay"] {
+  --paper: #EFE6DA; --paper-2: #E2D5C3; --paper-3: #CDBDA6;
+  --ink: #231A14; --ink-2: #4A3A2D; --ink-3: #7A6B5B; --ink-4: #AA9E8B;
+  --accent: #A03A1C; --accent-2: #7A2C15; --signal: #5A1A0B;
+  --rule: #CABBA3; --rule-strong: #917F68;
+}
+
+/* reset within artboards */
+.site *, .site *::before, .site *::after { box-sizing: border-box; }
+.site {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-serif);
+  font-size: var(--fs-md); line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  font-feature-settings: "kern", "liga";
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+}
+.site a { color: inherit; text-decoration: none; }
+.site h1, .site h2, .site h3, .site h4, .site h5, .site h6 { margin: 0; font-weight: 400; }
+.site p { margin: 0; }
+.site img { max-width: 100%; display: block; }
+.site button { font-family: inherit; }
+
+.sans { font-family: var(--font-sans); }
+.serif { font-family: var(--font-serif); }
+.mono { font-family: var(--font-mono); font-feature-settings: "zero"; }
+
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xxs);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.label--wide { letter-spacing: var(--ls-label-wide); }
+.dateline {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xxs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Paper grain overlay */
+.grain { position: relative; isolation: isolate; }
+.grain::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0 0.06  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 260px 260px; mix-blend-mode: multiply; opacity: 0.14; z-index: 2;
+}
+
+/* Photo / media wrapper with grain */
+.photo {
+  position: relative;
+  background: var(--paper-3);
+  overflow: hidden;
+}
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+.photo::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0 0.06  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 260px 260px; mix-blend-mode: multiply; opacity: 0.22;
+  z-index: 2;
+}
+
+/* media chips */
+.chip {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 5px 9px;
+  background: rgba(26,23,20,0.85);
+  color: var(--paper);
+  z-index: 3;
+  white-space: nowrap;
+}
+.chip--accent { background: var(--accent); color: var(--paper); }
+.chip--ghost { background: rgba(244,239,230,0.9); color: var(--ink); }
+.chip--signal { background: var(--signal); color: var(--paper); gap: 6px; display: inline-flex; align-items: center; }
+.chip--signal::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; display: inline-block;
+}
+
+/* Rules */
+.rule { border: none; border-top: var(--stroke-thin) solid var(--rule); margin: 0; }
+.rule-strong { border: none; border-top: var(--stroke-thin) solid var(--rule-strong); margin: 0; }
+.rule-thick { border: none; border-top: var(--stroke-thick) solid var(--fg); margin: 0; }
+
+/* Button (from system) */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 14px 24px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  line-height: 1;
+}
+.btn--primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.btn--ghost { background: transparent; color: var(--fg); border-color: var(--rule-strong); }
+.btn--accent { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.btn--lg { padding: 18px 32px; font-size: var(--fs-md); }
+.btn--sm { padding: 10px 18px; font-size: var(--fs-xs); }
+
+/* Tag */
+.tag {
+  display: inline-flex; align-items: center;
+  font-family: var(--font-sans);
+  font-size: var(--fs-xxs);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.tag--plain { border: none; padding-left: 0; color: var(--ink-3); }
+.tag--accent { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+/* Wordmark */
+.wm {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  color: var(--fg);
+  line-height: 1;
+}
+.wm .dot { color: var(--accent); }
+
+/* Waveform (for audio placeholders) */
+.waveform {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 32px;
+}
+.waveform .bar {
+  width: 2px;
+  background: currentColor;
+  flex: none;
+}
+
+/* Utility layout */
+.row { display: flex; align-items: center; }
+.between { justify-content: space-between; }
+.gap-2 { gap: var(--s-2); }
+.gap-3 { gap: var(--s-3); }
+.gap-4 { gap: var(--s-4); }
+.gap-5 { gap: var(--s-5); }
+.gap-6 { gap: var(--s-6); }
+
+/* Nav links */
+.navlink {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0;
+}
+.navlink:hover { color: var(--accent); }
+.navlink--active { color: var(--accent); }
+.navlink--small {
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+html, body { margin: 0; padding: 0; height: 100%; background: #f0eee9; }
+#root { width: 100%; height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" data-presets="react">
+// DesignCanvas.jsx — Figma-ish design canvas wrapper
+// Warm gray grid bg + Sections + Artboards + PostIt notes.
+// Artboards are reorderable (grip-drag), labels/titles are inline-editable,
+// and any artboard can be opened in a fullscreen focus overlay (←/→/Esc).
+// State persists to a .design-canvas.state.json sidecar via the host
+// bridge. No assets, no deps.
+//
+// Usage:
+//   <DesignCanvas>
+//     <DCSection id="onboarding" title="Onboarding" subtitle="First-run variants">
+//       <DCArtboard id="a" label="A · Dusk" width={260} height={480}>…</DCArtboard>
+//       <DCArtboard id="b" label="B · Minimal" width={260} height={480}>…</DCArtboard>
+//     </DCSection>
+//   </DesignCanvas>
+
+const DC = {
+  bg: '#f0eee9',
+  grid: 'rgba(0,0,0,0.06)',
+  label: 'rgba(60,50,40,0.7)',
+  title: 'rgba(40,30,20,0.85)',
+  subtitle: 'rgba(60,50,40,0.6)',
+  postitBg: '#fef4a8',
+  postitText: '#5a4a2a',
+  font: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
+};
+
+// One-time CSS injection (classes are dc-prefixed so they don't collide with
+// the hosted design's own styles).
+if (typeof document !== 'undefined' && !document.getElementById('dc-styles')) {
+  const s = document.createElement('style');
+  s.id = 'dc-styles';
+  s.textContent = [
+    '.dc-editable{cursor:text;outline:none;white-space:nowrap;border-radius:3px;padding:0 2px;margin:0 -2px}',
+    '.dc-editable:focus{background:#fff;box-shadow:0 0 0 1.5px #c96442}',
+    '[data-dc-slot]{transition:transform .18s cubic-bezier(.2,.7,.3,1)}',
+    '[data-dc-slot].dc-dragging{transition:none;z-index:10;pointer-events:none}',
+    '[data-dc-slot].dc-dragging .dc-card{box-shadow:0 12px 40px rgba(0,0,0,.25),0 0 0 2px #c96442;transform:scale(1.02)}',
+    '.dc-card{transition:box-shadow .15s,transform .15s}',
+    '.dc-card *{scrollbar-width:none}',
+    '.dc-card *::-webkit-scrollbar{display:none}',
+    '.dc-labelrow{display:flex;align-items:center;gap:4px;height:24px}',
+    '.dc-grip{cursor:grab;display:flex;align-items:center;padding:5px 4px;border-radius:4px;transition:background .12s}',
+    '.dc-grip:hover{background:rgba(0,0,0,.08)}',
+    '.dc-grip:active{cursor:grabbing}',
+    '.dc-labeltext{cursor:pointer;border-radius:4px;padding:3px 6px;display:flex;align-items:center;transition:background .12s}',
+    '.dc-labeltext:hover{background:rgba(0,0,0,.05)}',
+    '.dc-expand{position:absolute;bottom:100%;right:0;margin-bottom:5px;z-index:2;opacity:0;transition:opacity .12s,background .12s;',
+    '  width:22px;height:22px;border-radius:5px;border:none;cursor:pointer;padding:0;',
+    '  background:transparent;color:rgba(60,50,40,.7);display:flex;align-items:center;justify-content:center}',
+    '.dc-expand:hover{background:rgba(0,0,0,.06);color:#2a251f}',
+    '[data-dc-slot]:hover .dc-expand{opacity:1}',
+  ].join('\n');
+  document.head.appendChild(s);
+}
+
+const DCCtx = React.createContext(null);
+
+// ─────────────────────────────────────────────────────────────
+// DesignCanvas — stateful wrapper around the pan/zoom viewport.
+// Owns runtime state (per-section order, renamed titles/labels, focused
+// artboard). Order/titles/labels persist to a .design-canvas.state.json
+// sidecar next to the HTML. Reads go via plain fetch() so the saved
+// arrangement is visible anywhere the HTML + sidecar are served together
+// (omelette preview, direct link, downloaded zip). Writes go through the
+// host's window.omelette bridge — editing requires the omelette runtime.
+// Focus is ephemeral.
+// ─────────────────────────────────────────────────────────────
+const DC_STATE_FILE = '.design-canvas.state.json';
+
+function DesignCanvas({ children, minScale, maxScale, style }) {
+  const [state, setState] = React.useState({ sections: {}, focus: null });
+  // Hold rendering until the sidecar read settles so the saved order/titles
+  // appear on first paint (no source-order flash). didRead gates writes until
+  // the read settles so the empty initial state can't clobber a slow read;
+  // skipNextWrite suppresses the one echo-write that would otherwise follow
+  // hydration.
+  const [ready, setReady] = React.useState(false);
+  const didRead = React.useRef(false);
+  const skipNextWrite = React.useRef(false);
+
+  React.useEffect(() => {
+    let off = false;
+    fetch('./' + DC_STATE_FILE)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((saved) => {
+        if (off || !saved || !saved.sections) return;
+        skipNextWrite.current = true;
+        setState((s) => ({ ...s, sections: saved.sections }));
+      })
+      .catch(() => {})
+      .finally(() => { didRead.current = true; if (!off) setReady(true); });
+    const t = setTimeout(() => { if (!off) setReady(true); }, 150);
+    return () => { off = true; clearTimeout(t); };
+  }, []);
+
+  React.useEffect(() => {
+    if (!didRead.current) return;
+    if (skipNextWrite.current) { skipNextWrite.current = false; return; }
+    const t = setTimeout(() => {
+      window.omelette?.writeFile(DC_STATE_FILE, JSON.stringify({ sections: state.sections })).catch(() => {});
+    }, 250);
+    return () => clearTimeout(t);
+  }, [state.sections]);
+
+  // Build registries synchronously from children so FocusOverlay can read
+  // them in the same render. Only direct DCSection > DCArtboard children are
+  // walked — wrapping them in other elements opts out of focus/reorder.
+  const registry = {};     // slotId -> { sectionId, artboard }
+  const sectionMeta = {};  // sectionId -> { title, subtitle, slotIds[] }
+  const sectionOrder = [];
+  React.Children.forEach(children, (sec) => {
+    if (!sec || sec.type !== DCSection) return;
+    const sid = sec.props.id ?? sec.props.title;
+    if (!sid) return;
+    sectionOrder.push(sid);
+    const persisted = state.sections[sid] || {};
+    const srcIds = [];
+    React.Children.forEach(sec.props.children, (ab) => {
+      if (!ab || ab.type !== DCArtboard) return;
+      const aid = ab.props.id ?? ab.props.label;
+      if (!aid) return;
+      registry[`${sid}/${aid}`] = { sectionId: sid, artboard: ab };
+      srcIds.push(aid);
+    });
+    const kept = (persisted.order || []).filter((k) => srcIds.includes(k));
+    sectionMeta[sid] = {
+      title: persisted.title ?? sec.props.title,
+      subtitle: sec.props.subtitle,
+      slotIds: [...kept, ...srcIds.filter((k) => !kept.includes(k))],
+    };
+  });
+
+  const api = React.useMemo(() => ({
+    state,
+    section: (id) => state.sections[id] || {},
+    patchSection: (id, p) => setState((s) => ({
+      ...s,
+      sections: { ...s.sections, [id]: { ...s.sections[id], ...(typeof p === 'function' ? p(s.sections[id] || {}) : p) } },
+    })),
+    setFocus: (slotId) => setState((s) => ({ ...s, focus: slotId })),
+  }), [state]);
+
+  // Esc exits focus; any outside pointerdown commits an in-progress rename.
+  React.useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') api.setFocus(null); };
+    const onPd = (e) => {
+      const ae = document.activeElement;
+      if (ae && ae.isContentEditable && !ae.contains(e.target)) ae.blur();
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onPd, true);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPd, true);
+    };
+  }, [api]);
+
+  return (
+    <DCCtx.Provider value={api}>
+      <DCViewport minScale={minScale} maxScale={maxScale} style={style}>{ready && children}</DCViewport>
+      {state.focus && registry[state.focus] && (
+        <DCFocusOverlay entry={registry[state.focus]} sectionMeta={sectionMeta} sectionOrder={sectionOrder} />
+      )}
+    </DCCtx.Provider>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// DCViewport — transform-based pan/zoom (internal)
+//
+// Input mapping (Figma-style):
+//   • trackpad pinch  → zoom   (ctrlKey wheel; Safari gesture* events)
+//   • trackpad scroll → pan    (two-finger)
+//   • mouse wheel     → zoom   (notched; distinguished from trackpad scroll)
+//   • middle-drag / primary-drag-on-bg → pan
+//
+// Transform state lives in a ref and is written straight to the DOM
+// (translate3d + will-change) so wheel ticks don't go through React —
+// keeps pans at 60fps on dense canvases.
+// ─────────────────────────────────────────────────────────────
+function DCViewport({ children, minScale = 0.1, maxScale = 8, style = {} }) {
+  const vpRef = React.useRef(null);
+  const worldRef = React.useRef(null);
+  const tf = React.useRef({ x: 0, y: 0, scale: 1 });
+
+  const apply = React.useCallback(() => {
+    const { x, y, scale } = tf.current;
+    const el = worldRef.current;
+    if (el) el.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+  }, []);
+
+  React.useEffect(() => {
+    const vp = vpRef.current;
+    if (!vp) return;
+
+    const zoomAt = (cx, cy, factor) => {
+      const r = vp.getBoundingClientRect();
+      const px = cx - r.left, py = cy - r.top;
+      const t = tf.current;
+      const next = Math.min(maxScale, Math.max(minScale, t.scale * factor));
+      const k = next / t.scale;
+      // keep the world point under the cursor fixed
+      t.x = px - (px - t.x) * k;
+      t.y = py - (py - t.y) * k;
+      t.scale = next;
+      apply();
+    };
+
+    // Mouse-wheel vs trackpad-scroll heuristic. A physical wheel sends
+    // line-mode deltas (Firefox) or large integer pixel deltas with no X
+    // component (Chrome/Safari, typically multiples of 100/120). Trackpad
+    // two-finger scroll sends small/fractional pixel deltas, often with
+    // non-zero deltaX. ctrlKey is set by the browser for trackpad pinch.
+    const isMouseWheel = (e) =>
+      e.deltaMode !== 0 ||
+      (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 40);
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      if (isGesturing) return; // Safari: gesture* owns the pinch — discard concurrent wheels
+      if (e.ctrlKey) {
+        // trackpad pinch (or explicit ctrl+wheel)
+        zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.01));
+      } else if (isMouseWheel(e)) {
+        // notched mouse wheel — fixed-ratio step per click
+        zoomAt(e.clientX, e.clientY, Math.exp(-Math.sign(e.deltaY) * 0.18));
+      } else {
+        // trackpad two-finger scroll — pan
+        tf.current.x -= e.deltaX;
+        tf.current.y -= e.deltaY;
+        apply();
+      }
+    };
+
+    // Safari sends native gesture* events for trackpad pinch with a smooth
+    // e.scale; preferring these over the ctrl+wheel fallback gives a much
+    // better feel there. No-ops on other browsers. Safari also fires
+    // ctrlKey wheel events during the same pinch — isGesturing makes
+    // onWheel drop those entirely so they neither zoom nor pan.
+    let gsBase = 1;
+    let isGesturing = false;
+    const onGestureStart = (e) => { e.preventDefault(); isGesturing = true; gsBase = tf.current.scale; };
+    const onGestureChange = (e) => {
+      e.preventDefault();
+      zoomAt(e.clientX, e.clientY, (gsBase * e.scale) / tf.current.scale);
+    };
+    const onGestureEnd = (e) => { e.preventDefault(); isGesturing = false; };
+
+    // Drag-pan: middle button anywhere, or primary button on canvas
+    // background (anything that isn't an artboard or an inline editor).
+    let drag = null;
+    const onPointerDown = (e) => {
+      const onBg = !e.target.closest('[data-dc-slot], .dc-editable');
+      if (!(e.button === 1 || (e.button === 0 && onBg))) return;
+      e.preventDefault();
+      vp.setPointerCapture(e.pointerId);
+      drag = { id: e.pointerId, lx: e.clientX, ly: e.clientY };
+      vp.style.cursor = 'grabbing';
+    };
+    const onPointerMove = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      tf.current.x += e.clientX - drag.lx;
+      tf.current.y += e.clientY - drag.ly;
+      drag.lx = e.clientX; drag.ly = e.clientY;
+      apply();
+    };
+    const onPointerUp = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      vp.releasePointerCapture(e.pointerId);
+      drag = null;
+      vp.style.cursor = '';
+    };
+
+    vp.addEventListener('wheel', onWheel, { passive: false });
+    vp.addEventListener('gesturestart', onGestureStart, { passive: false });
+    vp.addEventListener('gesturechange', onGestureChange, { passive: false });
+    vp.addEventListener('gestureend', onGestureEnd, { passive: false });
+    vp.addEventListener('pointerdown', onPointerDown);
+    vp.addEventListener('pointermove', onPointerMove);
+    vp.addEventListener('pointerup', onPointerUp);
+    vp.addEventListener('pointercancel', onPointerUp);
+    return () => {
+      vp.removeEventListener('wheel', onWheel);
+      vp.removeEventListener('gesturestart', onGestureStart);
+      vp.removeEventListener('gesturechange', onGestureChange);
+      vp.removeEventListener('gestureend', onGestureEnd);
+      vp.removeEventListener('pointerdown', onPointerDown);
+      vp.removeEventListener('pointermove', onPointerMove);
+      vp.removeEventListener('pointerup', onPointerUp);
+      vp.removeEventListener('pointercancel', onPointerUp);
+    };
+  }, [apply, minScale, maxScale]);
+
+  const gridSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M120 0H0v120' fill='none' stroke='${encodeURIComponent(DC.grid)}' stroke-width='1'/%3E%3C/svg%3E")`;
+  return (
+    <div
+      ref={vpRef}
+      className="design-canvas"
+      style={{
+        height: '100vh', width: '100vw',
+        background: DC.bg,
+        overflow: 'hidden',
+        overscrollBehavior: 'none',
+        touchAction: 'none',
+        position: 'relative',
+        fontFamily: DC.font,
+        boxSizing: 'border-box',
+        ...style,
+      }}
+    >
+      <div
+        ref={worldRef}
+        style={{
+          position: 'absolute', top: 0, left: 0,
+          transformOrigin: '0 0',
+          willChange: 'transform',
+          width: 'max-content', minWidth: '100%',
+          minHeight: '100%',
+          padding: '60px 0 80px',
+        }}
+      >
+        <div style={{ position: 'absolute', inset: -6000, backgroundImage: gridSvg, backgroundSize: '120px 120px', pointerEvents: 'none', zIndex: -1 }} />
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// DCSection — editable title + h-row of artboards in persisted order
+// ─────────────────────────────────────────────────────────────
+function DCSection({ id, title, subtitle, children, gap = 48 }) {
+  const ctx = React.useContext(DCCtx);
+  const sid = id ?? title;
+  const all = React.Children.toArray(children);
+  const artboards = all.filter((c) => c && c.type === DCArtboard);
+  const rest = all.filter((c) => !(c && c.type === DCArtboard));
+  const srcOrder = artboards.map((a) => a.props.id ?? a.props.label);
+  const sec = (ctx && sid && ctx.section(sid)) || {};
+
+  const order = React.useMemo(() => {
+    const kept = (sec.order || []).filter((k) => srcOrder.includes(k));
+    return [...kept, ...srcOrder.filter((k) => !kept.includes(k))];
+  }, [sec.order, srcOrder.join('|')]);
+
+  const byId = Object.fromEntries(artboards.map((a) => [a.props.id ?? a.props.label, a]));
+
+  return (
+    <div data-dc-section={sid} style={{ marginBottom: 80, position: 'relative' }}>
+      <div style={{ padding: '0 60px 56px' }}>
+        <DCEditable tag="div" value={sec.title ?? title}
+          onChange={(v) => ctx && sid && ctx.patchSection(sid, { title: v })}
+          style={{ fontSize: 28, fontWeight: 600, color: DC.title, letterSpacing: -0.4, marginBottom: 6, display: 'inline-block' }} />
+        {subtitle && <div style={{ fontSize: 16, color: DC.subtitle }}>{subtitle}</div>}
+      </div>
+      <div style={{ display: 'flex', gap, padding: '0 60px', alignItems: 'flex-start', width: 'max-content' }}>
+        {order.map((k) => (
+          <DCArtboardFrame key={k} sectionId={sid} artboard={byId[k]} order={order}
+            label={(sec.labels || {})[k] ?? byId[k].props.label}
+            onRename={(v) => ctx && ctx.patchSection(sid, (x) => ({ labels: { ...x.labels, [k]: v } }))}
+            onReorder={(next) => ctx && ctx.patchSection(sid, { order: next })}
+            onFocus={() => ctx && ctx.setFocus(`${sid}/${k}`)} />
+        ))}
+      </div>
+      {rest}
+    </div>
+  );
+}
+
+// DCArtboard — marker; rendered by DCArtboardFrame via DCSection.
+function DCArtboard() { return null; }
+
+function DCArtboardFrame({ sectionId, artboard, label, order, onRename, onReorder, onFocus }) {
+  const { id: rawId, label: rawLabel, width = 260, height = 480, children, style = {} } = artboard.props;
+  const id = rawId ?? rawLabel;
+  const ref = React.useRef(null);
+
+  // Live drag-reorder: dragged card sticks to cursor; siblings slide into
+  // their would-be slots in real time via transforms. DOM order only
+  // changes on drop.
+  const onGripDown = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const me = ref.current;
+    // translateX is applied in local (pre-scale) space but pointer deltas and
+    // getBoundingClientRect().left are screen-space — divide by the viewport's
+    // current scale so the dragged card tracks the cursor at any zoom level.
+    const scale = me.getBoundingClientRect().width / me.offsetWidth || 1;
+    const peers = Array.from(document.querySelectorAll(`[data-dc-section="${sectionId}"] [data-dc-slot]`));
+    const homes = peers.map((el) => ({ el, id: el.dataset.dcSlot, x: el.getBoundingClientRect().left }));
+    const slotXs = homes.map((h) => h.x);
+    const startIdx = order.indexOf(id);
+    const startX = e.clientX;
+    let liveOrder = order.slice();
+    me.classList.add('dc-dragging');
+
+    const layout = () => {
+      for (const h of homes) {
+        if (h.id === id) continue;
+        const slot = liveOrder.indexOf(h.id);
+        h.el.style.transform = `translateX(${(slotXs[slot] - h.x) / scale}px)`;
+      }
+    };
+
+    const move = (ev) => {
+      const dx = ev.clientX - startX;
+      me.style.transform = `translateX(${dx / scale}px)`;
+      const cur = homes[startIdx].x + dx;
+      let nearest = 0, best = Infinity;
+      for (let i = 0; i < slotXs.length; i++) {
+        const d = Math.abs(slotXs[i] - cur);
+        if (d < best) { best = d; nearest = i; }
+      }
+      if (liveOrder.indexOf(id) !== nearest) {
+        liveOrder = order.filter((k) => k !== id);
+        liveOrder.splice(nearest, 0, id);
+        layout();
+      }
+    };
+
+    const up = () => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+      const finalSlot = liveOrder.indexOf(id);
+      me.classList.remove('dc-dragging');
+      me.style.transform = `translateX(${(slotXs[finalSlot] - homes[startIdx].x) / scale}px)`;
+      // After the settle transition, kill transitions + clear transforms +
+      // commit the reorder in the same frame so there's no visual snap-back.
+      setTimeout(() => {
+        for (const h of homes) { h.el.style.transition = 'none'; h.el.style.transform = ''; }
+        if (liveOrder.join('|') !== order.join('|')) onReorder(liveOrder);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          for (const h of homes) h.el.style.transition = '';
+        }));
+      }, 180);
+    };
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', up);
+  };
+
+  return (
+    <div ref={ref} data-dc-slot={id} style={{ position: 'relative', flexShrink: 0 }}>
+      <div className="dc-labelrow" style={{ position: 'absolute', bottom: '100%', left: -4, marginBottom: 4, color: DC.label }}>
+        <div className="dc-grip" onPointerDown={onGripDown} title="Drag to reorder">
+          <svg width="9" height="13" viewBox="0 0 9 13" fill="currentColor"><circle cx="2" cy="2" r="1.1"/><circle cx="7" cy="2" r="1.1"/><circle cx="2" cy="6.5" r="1.1"/><circle cx="7" cy="6.5" r="1.1"/><circle cx="2" cy="11" r="1.1"/><circle cx="7" cy="11" r="1.1"/></svg>
+        </div>
+        <div className="dc-labeltext" onClick={onFocus} title="Click to focus">
+          <DCEditable value={label} onChange={onRename} onClick={(e) => e.stopPropagation()}
+            style={{ fontSize: 15, fontWeight: 500, color: DC.label, lineHeight: 1 }} />
+        </div>
+      </div>
+      <button className="dc-expand" onClick={onFocus} onPointerDown={(e) => e.stopPropagation()} title="Focus">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M7 1h4v4M5 11H1V7M11 1L7.5 4.5M1 11l3.5-3.5"/></svg>
+      </button>
+      <div className="dc-card"
+        style={{ borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06)', overflow: 'hidden', width, height, background: '#fff', ...style }}>
+        {children || <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb', fontSize: 13, fontFamily: DC.font }}>{id}</div>}
+      </div>
+    </div>
+  );
+}
+
+// Inline rename — commits on blur or Enter.
+function DCEditable({ value, onChange, style, tag = 'span', onClick }) {
+  const T = tag;
+  return (
+    <T className="dc-editable" contentEditable suppressContentEditableWarning
+      onClick={onClick}
+      onPointerDown={(e) => e.stopPropagation()}
+      onBlur={(e) => onChange && onChange(e.currentTarget.textContent)}
+      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); } }}
+      style={style}>{value}</T>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Focus mode — overlay one artboard; ←/→ within section, ↑/↓ across
+// sections, Esc or backdrop click to exit.
+// ─────────────────────────────────────────────────────────────
+function DCFocusOverlay({ entry, sectionMeta, sectionOrder }) {
+  const ctx = React.useContext(DCCtx);
+  const { sectionId, artboard } = entry;
+  const sec = ctx.section(sectionId);
+  const meta = sectionMeta[sectionId];
+  const peers = meta.slotIds;
+  const aid = artboard.props.id ?? artboard.props.label;
+  const idx = peers.indexOf(aid);
+  const secIdx = sectionOrder.indexOf(sectionId);
+
+  const go = (d) => { const n = peers[(idx + d + peers.length) % peers.length]; if (n) ctx.setFocus(`${sectionId}/${n}`); };
+  const goSection = (d) => {
+    const ns = sectionOrder[(secIdx + d + sectionOrder.length) % sectionOrder.length];
+    const first = sectionMeta[ns] && sectionMeta[ns].slotIds[0];
+    if (first) ctx.setFocus(`${ns}/${first}`);
+  };
+
+  React.useEffect(() => {
+    const k = (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); goSection(-1); }
+      if (e.key === 'ArrowDown') { e.preventDefault(); goSection(1); }
+    };
+    document.addEventListener('keydown', k);
+    return () => document.removeEventListener('keydown', k);
+  });
+
+  const { width = 260, height = 480, children } = artboard.props;
+  const [vp, setVp] = React.useState({ w: window.innerWidth, h: window.innerHeight });
+  React.useEffect(() => { const r = () => setVp({ w: window.innerWidth, h: window.innerHeight }); window.addEventListener('resize', r); return () => window.removeEventListener('resize', r); }, []);
+  const scale = Math.max(0.1, Math.min((vp.w - 200) / width, (vp.h - 260) / height, 2));
+
+  const [ddOpen, setDd] = React.useState(false);
+  const Arrow = ({ dir, onClick }) => (
+    <button onClick={(e) => { e.stopPropagation(); onClick(); }}
+      style={{ position: 'absolute', top: '50%', [dir]: 28, transform: 'translateY(-50%)',
+        border: 'none', background: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.9)',
+        width: 44, height: 44, borderRadius: 22, fontSize: 18, cursor: 'pointer',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background .15s' }}
+      onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.18)')}
+      onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.08)')}>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d={dir === 'left' ? 'M11 3L5 9l6 6' : 'M7 3l6 6-6 6'} /></svg>
+    </button>
+  );
+
+  // Portal to body so position:fixed is the real viewport regardless of any
+  // transform on DesignCanvas's ancestors (including the canvas zoom itself).
+  return ReactDOM.createPortal(
+    <div onClick={() => ctx.setFocus(null)}
+      onWheel={(e) => e.preventDefault()}
+      style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(24,20,16,.6)', backdropFilter: 'blur(14px)',
+        fontFamily: DC.font, color: '#fff' }}>
+
+      {/* top bar: section dropdown (left) · close (right) */}
+      <div onClick={(e) => e.stopPropagation()}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 72, display: 'flex', alignItems: 'flex-start', padding: '16px 20px 0', gap: 16 }}>
+        <div style={{ position: 'relative' }}>
+          <button onClick={() => setDd((o) => !o)}
+            style={{ border: 'none', background: 'transparent', color: '#fff', cursor: 'pointer', padding: '6px 8px',
+              borderRadius: 6, textAlign: 'left', fontFamily: 'inherit' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18, fontWeight: 600, letterSpacing: -0.3 }}>{meta.title}</span>
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" style={{ opacity: .7 }}><path d="M2 4l3.5 3.5L9 4"/></svg>
+            </span>
+            {meta.subtitle && <span style={{ display: 'block', fontSize: 13, opacity: .6, fontWeight: 400, marginTop: 2 }}>{meta.subtitle}</span>}
+          </button>
+          {ddOpen && (
+            <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 4, background: '#2a251f', borderRadius: 8,
+              boxShadow: '0 8px 32px rgba(0,0,0,.4)', padding: 4, minWidth: 200, zIndex: 10 }}>
+              {sectionOrder.map((sid) => (
+                <button key={sid} onClick={() => { setDd(false); const f = sectionMeta[sid].slotIds[0]; if (f) ctx.setFocus(`${sid}/${f}`); }}
+                  style={{ display: 'block', width: '100%', textAlign: 'left', border: 'none', cursor: 'pointer',
+                    background: sid === sectionId ? 'rgba(255,255,255,.1)' : 'transparent', color: '#fff',
+                    padding: '8px 12px', borderRadius: 5, fontSize: 14, fontWeight: sid === sectionId ? 600 : 400, fontFamily: 'inherit' }}>
+                  {sectionMeta[sid].title}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <div style={{ flex: 1 }} />
+        <button onClick={() => ctx.setFocus(null)}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.12)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+          style={{ border: 'none', background: 'transparent', color: 'rgba(255,255,255,.7)', width: 32, height: 32,
+            borderRadius: 16, fontSize: 20, cursor: 'pointer', lineHeight: 1, transition: 'background .12s' }}>×</button>
+      </div>
+
+      {/* card centered, label + index below — only the card itself stops
+          propagation so any backdrop click (including the margins around
+          the card) exits focus */}
+      <div
+        style={{ position: 'absolute', top: 64, bottom: 56, left: 100, right: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
+        <div onClick={(e) => e.stopPropagation()} style={{ width: width * scale, height: height * scale, position: 'relative' }}>
+          <div style={{ width, height, transform: `scale(${scale})`, transformOrigin: 'top left', background: '#fff', borderRadius: 2, overflow: 'hidden',
+            boxShadow: '0 20px 80px rgba(0,0,0,.4)' }}>
+            {children || <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb' }}>{aid}</div>}
+          </div>
+        </div>
+        <div onClick={(e) => e.stopPropagation()} style={{ fontSize: 14, fontWeight: 500, opacity: .85, textAlign: 'center' }}>
+          {(sec.labels || {})[aid] ?? artboard.props.label}
+          <span style={{ opacity: .5, marginLeft: 10, fontVariantNumeric: 'tabular-nums' }}>{idx + 1} / {peers.length}</span>
+        </div>
+      </div>
+
+      <Arrow dir="left" onClick={() => go(-1)} />
+      <Arrow dir="right" onClick={() => go(1)} />
+
+      {/* dots */}
+      <div onClick={(e) => e.stopPropagation()}
+        style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8 }}>
+        {peers.map((p, i) => (
+          <button key={p} onClick={() => ctx.setFocus(`${sectionId}/${p}`)}
+            style={{ border: 'none', padding: 0, cursor: 'pointer', width: 6, height: 6, borderRadius: 3,
+              background: i === idx ? '#fff' : 'rgba(255,255,255,.3)' }} />
+        ))}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Post-it — absolute-positioned sticky note
+// ─────────────────────────────────────────────────────────────
+function DCPostIt({ children, top, left, right, bottom, rotate = -2, width = 180 }) {
+  return (
+    <div style={{
+      position: 'absolute', top, left, right, bottom, width,
+      background: DC.postitBg, padding: '14px 16px',
+      fontFamily: '"Comic Sans MS", "Marker Felt", "Segoe Print", cursive',
+      fontSize: 14, lineHeight: 1.4, color: DC.postitText,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)',
+      transform: `rotate(${rotate}deg)`,
+      zIndex: 5,
+    }}>{children}</div>
+  );
+}
+
+Object.assign(window, { DesignCanvas, DCSection, DCArtboard, DCPostIt });
+
+</script>
+<script type="text/babel" data-presets="react">// site/components.jsx — shared site components
+
+// ─────────── image helper ───────────
+// Deterministic documentary-feel images from picsum.photos
+// Grayscale for documentary tone; seed keeps them stable per subject.
+const IMG = (seed, w = 1200, h = 800, opts = {}) => {
+  const g = opts.color ? '' : '?grayscale';
+  const sep = g ? '&' : '?';
+  const blur = opts.blur ? `${sep}blur=${opts.blur}` : '';
+  return `https://picsum.photos/seed/otg-${seed}/${w}/${h}${g}${blur}`;
+};
+
+// ─────────── primitives ───────────
+function Wordmark({ size = 20, weight = 700, style = {}, showDot = true }) {
+  return (
+    <span className="wm" style={{ fontSize: size, fontWeight: weight, ...style }}>
+      ontheground{showDot && <span className="dot">.</span>}
+    </span>
+  );
+}
+
+function Dateline({ children, style = {} }) {
+  return <span className="dateline" style={style}>{children}</span>;
+}
+
+function Label({ children, wide = false, style = {} }) {
+  return <span className={`label${wide ? ' label--wide' : ''}`} style={style}>{children}</span>;
+}
+
+function Rule({ strong = false, thick = false, style = {} }) {
+  const cls = thick ? 'rule-thick' : strong ? 'rule-strong' : 'rule';
+  return <hr className={cls} style={style} />;
+}
+
+function Tag({ children, variant, style = {} }) {
+  const v = variant === 'plain' ? ' tag--plain' : variant === 'accent' ? ' tag--accent' : '';
+  return <span className={`tag${v}`} style={style}>{children}</span>;
+}
+
+// ─────────── Photo (with grain) ───────────
+function Photo({ src, alt = '', aspect, style = {}, children, clickable = false, caption = '', index = null, total = null, hires = null }) {
+  const handleClick = clickable ? (e) => {
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent('otg:lightbox', {
+      detail: { src: hires || src, caption, index, total, alt },
+    }));
+  } : undefined;
+  const noSave = {
+    onContextMenu: (e) => e.preventDefault(),
+    onDragStart: (e) => e.preventDefault(),
+  };
+  return (
+    <div
+      className={`photo${clickable ? ' photo--clickable' : ''}`}
+      style={{ aspectRatio: aspect, cursor: clickable ? 'zoom-in' : undefined, ...style }}
+      onClick={handleClick}
+      {...noSave}
+    >
+      {src ? <img src={src} alt={alt} draggable="false" {...noSave} /> : null}
+      {children}
+    </div>
+  );
+}
+
+// ─────────── Lightbox ───────────
+// Fires on custom 'otg:lightbox' events. Full-viewport, dark, with anti-download measures.
+function Lightbox() {
+  const [state, setState] = React.useState(null); // { src, caption, index, total }
+  React.useEffect(() => {
+    const onOpen = (e) => setState(e.detail);
+    const onKey = (e) => { if (e.key === 'Escape') setState(null); };
+    window.addEventListener('otg:lightbox', onOpen);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('otg:lightbox', onOpen);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, []);
+  if (!state) return null;
+  const noSave = {
+    onContextMenu: (e) => e.preventDefault(),
+    onDragStart: (e) => e.preventDefault(),
+  };
+  return (
+    <div
+      onClick={() => setState(null)}
+      {...noSave}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9999,
+        background: 'rgba(14,13,11,0.96)',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        padding: '48px 48px 32px',
+        userSelect: 'none', WebkitUserSelect: 'none',
+        cursor: 'zoom-out',
+      }}
+    >
+      {/* Close button */}
+      <button
+        onClick={(e) => { e.stopPropagation(); setState(null); }}
+        aria-label="Close"
+        style={{
+          position: 'absolute', top: 20, right: 24,
+          background: 'transparent', border: 'none', cursor: 'pointer',
+          color: '#F4EFE6', fontFamily: 'var(--font-mono)',
+          fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase',
+          padding: 8,
+        }}
+      >
+        Close · Esc
+      </button>
+      {/* Image — wrapped, draggable disabled, overlay div to block save-image-as in some browsers */}
+      <div
+        style={{ position: 'relative', maxWidth: '100%', maxHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={state.src}
+          alt={state.alt || ''}
+          draggable="false"
+          {...noSave}
+          style={{
+            maxWidth: '100%', maxHeight: 'calc(100vh - 140px)',
+            objectFit: 'contain',
+            userSelect: 'none', WebkitUserDrag: 'none',
+            pointerEvents: 'none',
+          }}
+        />
+        {/* transparent overlay — intercepts right-click + drag at pixel level */}
+        <div
+          {...noSave}
+          style={{ position: 'absolute', inset: 0, background: 'transparent' }}
+        />
+      </div>
+      {/* Caption bar */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+          width: '100%', maxWidth: 1400, marginTop: 20,
+          color: '#CFC6B3',
+        }}
+      >
+        <span className="serif" style={{ fontSize: 14, fontStyle: 'italic' }}>
+          {state.caption}
+        </span>
+        {state.index != null && (
+          <span className="mono" style={{ fontSize: 11, letterSpacing: '0.1em', color: '#8E8674' }}>
+            {String(state.index).padStart(2, '0')}{state.total ? ` / ${String(state.total).padStart(2, '0')}` : ''}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─────────── Nav ───────────
+function SiteNav({ lang = 'EN', active = '' }) {
+  const items = [
+    { id: 'reportage', label: 'Reportage' },
+    { id: 'podcast', label: 'Podcast' },
+    { id: 'documentary', label: 'Documentary' },
+    { id: 'photography', label: 'Photography' },
+    { id: 'commissioned', label: 'Commissioned' },
+    { id: 'blog', label: 'Blog' },
+    { id: 'about', label: 'About' },
+    { id: 'contact', label: 'Contact' },
+  ];
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'auto 1fr auto',
+      alignItems: 'center',
+      gap: 48,
+      padding: '22px 48px',
+      borderBottom: '1px solid var(--rule)',
+      background: 'var(--paper)',
+    }}>
+      <Wordmark size={28} />
+      <nav style={{ display: 'flex', gap: 28, justifyContent: 'center' }}>
+        {items.map(it => (
+          <a key={it.id} className={`navlink${active === it.id ? ' navlink--active' : ''}`} href={`#${it.id}`}>
+            {it.label}
+          </a>
+        ))}
+      </nav>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+        <div className="dateline" style={{ color: 'var(--ink-3)' }}>
+          <span style={{ color: lang === 'EN' ? 'var(--fg)' : 'var(--ink-4)' }}>EN</span>
+          <span style={{ margin: '0 6px', color: 'var(--ink-4)' }}>/</span>
+          <span style={{ color: lang === 'NL' ? 'var(--fg)' : 'var(--ink-4)' }}>NL</span>
+        </div>
+        <button className="btn btn--ghost btn--sm" style={{ borderWidth: 1 }}>
+          <Search14 /> Search
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Alt nav — minimal (wordmark + menu button)
+function SiteNavMinimal({ active = '' }) {
+  return (
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      padding: '22px 48px',
+      borderBottom: '1px solid var(--rule)',
+      background: 'var(--paper)',
+    }}>
+      <Wordmark size={28} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+        <div className="dateline">EN · NL</div>
+        <span className="dateline" style={{ color: 'var(--ink-4)' }}>|</span>
+        <a href="#" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span className="label">Index</span>
+          <MenuIcon />
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// ─────────── Icons (thin stroke) ───────────
+function Search14() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <circle cx="6" cy="6" r="4.5" />
+      <line x1="9.5" y1="9.5" x2="12.5" y2="12.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+function MenuIcon() {
+  return (
+    <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" strokeWidth="1.2">
+      <line x1="0" y1="1" x2="22" y2="1" />
+      <line x1="0" y1="9" x2="22" y2="9" />
+    </svg>
+  );
+}
+function Play({ size = 18, fill = 'currentColor' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 18 18" fill="none">
+      <path d="M4 2.5 L15 9 L4 15.5 Z" fill={fill} />
+    </svg>
+  );
+}
+function ArrowRight({ size = 14 }) {
+  return (
+    <svg width={size * 1.4} height={size} viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <line x1="0" y1="7" x2="18" y2="7" strokeLinecap="round" />
+      <polyline points="13,2 19,7 13,12" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// ─────────── Waveform ───────────
+function Waveform({ bars = 64, height = 28, progress = 0, color = 'currentColor', peaks }) {
+  // deterministic waveform — sine-ish with random noise
+  const arr = [];
+  let seed = 7;
+  const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+  for (let i = 0; i < bars; i++) {
+    if (peaks) {
+      arr.push(peaks[i % peaks.length]);
+    } else {
+      const base = Math.sin(i / bars * Math.PI * 3) * 0.5 + 0.6;
+      const v = Math.max(0.15, Math.min(1, base * (0.7 + rnd() * 0.5)));
+      arr.push(v);
+    }
+  }
+  return (
+    <div className="waveform" style={{ height, color }}>
+      {arr.map((v, i) => (
+        <div key={i} className="bar"
+          style={{
+            height: `${v * 100}%`,
+            opacity: progress && i / bars > progress ? 0.32 : 1,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─────────── Inline audio player (compact) ───────────
+function AudioRow({ title, sub, duration, progress = 0.3, image, accent = false }) {
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '56px 1fr auto',
+      gap: 16,
+      alignItems: 'center',
+      padding: 16,
+      background: 'var(--paper-2)',
+      border: '1px solid var(--rule)',
+    }}>
+      {image ? (
+        <Photo src={image} aspect="1 / 1" style={{ width: 56, height: 56 }} />
+      ) : (
+        <div style={{
+          width: 56, height: 56, background: 'var(--ink)', color: 'var(--paper)',
+          display: 'grid', placeItems: 'center',
+        }}>
+          <Play size={16} fill="currentColor" />
+        </div>
+      )}
+      <div style={{ minWidth: 0 }}>
+        <div className="sans" style={{ fontSize: 15, fontWeight: 600, color: 'var(--fg)', marginBottom: 4 }}>{title}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Waveform bars={48} height={18} progress={progress} color={accent ? 'var(--accent)' : 'var(--ink-2)'} />
+          <span className="dateline" style={{ minWidth: 56, textAlign: 'right' }}>{duration}</span>
+        </div>
+        {sub && <div className="dateline" style={{ marginTop: 6, color: 'var(--ink-3)' }}>{sub}</div>}
+      </div>
+      <button style={{
+        width: 44, height: 44, border: 'none', background: 'var(--ink)', color: 'var(--paper)',
+        display: 'grid', placeItems: 'center', cursor: 'pointer',
+      }}>
+        <Play size={16} fill="currentColor" />
+      </button>
+    </div>
+  );
+}
+
+// ─────────── Footer ───────────
+function Footer({ variant = 'full' }) {
+  return (
+    <footer style={{
+      background: 'var(--paper-2)',
+      borderTop: '1px solid var(--rule)',
+      padding: '64px 48px 40px',
+    }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1.4fr 1fr 1fr 1.2fr',
+        gap: 48,
+        marginBottom: 56,
+      }}>
+        <div>
+          <Wordmark size={28} />
+          <p className="serif" style={{
+            marginTop: 16, color: 'var(--ink-2)',
+            fontSize: 15, lineHeight: 1.55, maxWidth: 320,
+          }}>
+            A journalism production house that tells the story from where it happens.
+          </p>
+          <div className="dateline" style={{ marginTop: 20 }}>
+            Rotterdam · est. 2020
+          </div>
+        </div>
+        <div>
+          <div className="label" style={{ marginBottom: 16, color: 'var(--ink-2)' }}>Work</div>
+          <div style={{ display: 'grid', gap: 10 }}>
+            {['Reportage', 'Podcast', 'Documentary', 'Photography', 'Commissioned'].map(x => (
+              <a key={x} className="navlink navlink--small" href="#">{x}</a>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="label" style={{ marginBottom: 16, color: 'var(--ink-2)' }}>Studio</div>
+          <div style={{ display: 'grid', gap: 10 }}>
+            {['About', 'Blog', 'Contact'].map(x => (
+              <a key={x} className="navlink navlink--small" href="#">{x}</a>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="label" style={{ marginBottom: 16, color: 'var(--ink-2)' }}>Newsletter</div>
+          <p className="serif" style={{ fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.5, marginBottom: 16 }}>
+            One letter a month. What we&rsquo;re working on, what we&rsquo;re hearing, what stays with us.
+          </p>
+          <div style={{
+            display: 'grid', gridTemplateColumns: '1fr auto',
+            border: '1px solid var(--rule-strong)',
+            background: 'var(--paper)',
+          }}>
+            <input
+              placeholder="your@email"
+              className="serif"
+              style={{
+                border: 'none', background: 'transparent',
+                padding: '12px 14px', fontSize: 14, color: 'var(--fg)',
+                outline: 'none',
+              }}
+            />
+            <button className="btn btn--primary btn--sm" style={{ borderRadius: 0, borderWidth: 0 }}>
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+      <Rule />
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        paddingTop: 24,
+      }}>
+        <div className="dateline" style={{ color: 'var(--ink-3)' }}>
+          © ontheground 2019–2026. All work remains with its makers.
+        </div>
+        <div className="dateline" style={{ color: 'var(--ink-3)' }}>
+          alwaysontheground.com
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ─────────── exports ───────────
+Object.assign(window, {
+  IMG, Wordmark, Dateline, Label, Rule, Tag, Photo, Lightbox,
+  SiteNav, SiteNavMinimal, Waveform, AudioRow, Footer,
+  Play, ArrowRight, Search14, MenuIcon,
+});
+</script>
+<script type="text/babel" data-presets="react">// site-home.jsx — Home (single direction: A structure + B atmosphere)
+
+function HomeA() {
+  return (
+    <div className="site">
+      <SiteNav active="" />
+
+      {/* Hero — B's scale + calm, A's dual-column info */}
+      <section style={{ padding: '112px 64px 88px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div className="dateline" style={{ marginBottom: 40 }}>
+            ontheground · journalism production house · est. Rotterdam 2020
+          </div>
+          <h1 className="sans" style={{
+            fontSize: 128, lineHeight: 0.94, letterSpacing: '-0.045em',
+            fontWeight: 400, maxWidth: 1200,
+          }}>
+            We believe<br />
+            in telling{' '}
+            <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400 }}>
+              true stories<span style={{ color: 'var(--accent)' }}>.</span>
+            </em>
+          </h1>
+        </div>
+      </section>
+
+      {/* Featured story — quieter, larger image, less busy */}
+      <section style={{ padding: '64px 64px 96px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div className="row between" style={{ marginBottom: 40, alignItems: 'baseline' }}>
+            <Label wide>Featured · This month</Label>
+            <span className="dateline">Published 14.04.26</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 72, alignItems: 'center' }}>
+            <Photo src={IMG('harreveld-hero', 1600, 1100)} aspect="8 / 5">
+              <span className="chip" style={{ top: 20, left: 20 }}>Podcast · 8 eps · 6h 42m</span>
+            </Photo>
+            <div>
+              <Dateline>Harreveld, NL · 52.0147°N 6.4953°E · 2024</Dateline>
+              <h2 className="sans" style={{
+                fontSize: 68, lineHeight: 0.98, letterSpacing: '-0.035em',
+                fontWeight: 500, marginTop: 24,
+              }}>
+                Het einde van{' '}
+                <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400 }}>
+                  Harreveld<span style={{ color: 'var(--accent)' }}>.</span>
+                </em>
+              </h2>
+              <p className="serif" style={{
+                fontSize: 19, lineHeight: 1.5, color: 'var(--ink-2)',
+                marginTop: 28, maxWidth: 460,
+              }}>
+                Eight months inside a closed youth-care facility, in the year it was told to close its doors.
+                A podcast series in eight episodes about institutions, last chances, and the children caught
+                between them.
+              </p>
+              <div style={{ marginTop: 36 }}>
+                <a className="btn btn--primary btn--lg" href="#">
+                  Listen to the series <ArrowRight />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Recent work — A's grid, but calmer: 3-col with more air, alternating treatment */}
+      <section style={{ padding: '80px 64px', borderTop: '1px solid var(--rule)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div className="row between" style={{ marginBottom: 56, alignItems: 'baseline' }}>
+            <div>
+              <Label wide>2023—2026</Label>
+              <h3 className="sans" style={{
+                fontSize: 44, fontWeight: 500, letterSpacing: '-0.025em', marginTop: 14,
+              }}>
+                Selected work<span style={{ color: 'var(--accent)' }}>.</span>
+              </h3>
+            </div>
+            <a className="navlink" href="#" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              Full archive <ArrowRight />
+            </a>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 40, rowGap: 72 }}>
+            <HomeCard
+              image={IMG('beirut', 1000, 700)}
+              kind="Documentary · 52 min"
+              title="The Sound of Broken Glass"
+              meta="Beirut, LB · 2024"
+              blurb="After the explosion: a neighbourhood learns to listen to itself again."
+            />
+            <HomeCard
+              image={IMG('kharkiv', 1000, 700)}
+              kind="Reportage · VRT"
+              title="Winter line"
+              meta="Kharkiv oblast, UA · 2024"
+              blurb="Four days with a trench-maintenance crew on the eastern front."
+            />
+            <HomeCard
+              image={IMG('dominee', 1000, 700)}
+              kind="Podcast · 6 eps"
+              title="De Nieuwe Dominee"
+              meta="Groningen, NL · 2023"
+              blurb="A village gets a minister who doesn't believe in God."
+            />
+            <HomeCard
+              image={IMG('liever-stil', 1000, 700, { color: true })}
+              kind="Photography · 36 frames"
+              title="Liever Stil"
+              meta="Friesland, NL · 2023"
+              blurb="An assisted-living home where the rule is 'rather quiet'."
+            />
+            <HomeCard
+              image={IMG('balkan', 1000, 700)}
+              kind="Podcast · 10 eps"
+              title="Balkan Express"
+              meta="Sarajevo → Pristina · 2022"
+              blurb="A night train that carries four countries' unfinished arguments."
+            />
+            <HomeCard
+              image={IMG('warchild', 1000, 700)}
+              kind="Commissioned · War Child"
+              title="Five children, five drawings"
+              meta="Lebanon · 2023"
+              blurb="Short film and field book. Commissioned by War Child Nederland."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Dispatch — dark strip, calmer */}
+      <section style={{
+        padding: '96px 64px',
+        background: 'var(--ink)',
+        color: 'var(--paper)',
+        borderTop: '1px solid var(--rule)',
+      }}>
+        <div style={{
+          maxWidth: 1280, margin: '0 auto',
+          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 96, alignItems: 'center',
+        }}>
+          <div>
+            <span className="dateline" style={{ color: 'var(--accent)' }}>
+              Newsletter
+            </span>
+            <h3 className="sans" style={{
+              fontSize: 56, lineHeight: 1.02, letterSpacing: '-0.03em',
+              fontWeight: 500, marginTop: 20,
+            }}>
+              One letter<br />a month<span style={{ color: 'var(--accent)' }}>.</span>{' '}
+              <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400, color: 'var(--paper-3)' }}>
+                Never breaking.<br />Always grounded.
+              </em>
+            </h3>
+          </div>
+          <div>
+            <p className="serif" style={{
+              fontSize: 18, lineHeight: 1.55, color: '#CFC6B3',
+              maxWidth: 460, marginBottom: 28,
+            }}>
+              Where we are, what we're hearing, a photograph we can't stop looking at, a sentence we
+              overheard at a kitchen table. Sent when there's something worth sending.
+            </p>
+            <div style={{
+              display: 'grid', gridTemplateColumns: '1fr auto',
+              border: '1px solid #3A342C',
+              background: 'rgba(244,239,230,0.04)',
+            }}>
+              <input
+                placeholder="your@email"
+                className="serif"
+                style={{
+                  border: 'none', background: 'transparent',
+                  padding: '18px 20px', fontSize: 16, color: 'var(--paper)',
+                  outline: 'none',
+                }}
+              />
+              <button className="btn btn--accent" style={{ borderRadius: 0, border: 'none' }}>
+                Subscribe
+              </button>
+            </div>
+            <div className="dateline" style={{ marginTop: 18, color: '#8E8674' }}>
+              1,247 subscribers · No tracking · Unsubscribe in 2 clicks
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+function HomeCard({ image, kind, title, meta, blurb }) {
+  return (
+    <a href="#" style={{ display: 'block', cursor: 'pointer' }}>
+      <Photo src={image} aspect="10 / 7">
+        <span className="chip" style={{ top: 14, left: 14 }}>{kind}</span>
+      </Photo>
+      <div style={{ paddingTop: 20 }}>
+        <Dateline>{meta}</Dateline>
+        <h4 className="sans" style={{
+          fontSize: 26, lineHeight: 1.1, letterSpacing: '-0.02em',
+          fontWeight: 500, marginTop: 10,
+        }}>
+          {title}
+        </h4>
+        <p className="serif" style={{
+          fontSize: 16, lineHeight: 1.5, color: 'var(--ink-2)',
+          marginTop: 12,
+        }}>
+          {blurb}
+        </p>
+      </div>
+    </a>
+  );
+}
+
+// Keep HomeB/HomeC exported as HomeA aliases for back-compat if referenced
+const HomeB = HomeA;
+const HomeC = HomeA;
+
+Object.assign(window, { HomeA, HomeB, HomeC });
+</script>
+<script type="text/babel" data-presets="react">// site/overview.jsx — Discipline overview page variants
+
+// Content for the "Reportage" discipline — works for all 5 disciplines
+const REPORTAGE_ITEMS = [
+  {
+    image: IMG('ov-kharkiv', 900, 600),
+    outlet: 'VRT Ter Zake',
+    title: 'Winter line',
+    place: 'Kharkiv oblast, UA',
+    year: '2024',
+    dur: '11m',
+    region: 'Eastern Europe',
+    medium: 'TV · 11 min',
+    desc: 'Four days with a trench-maintenance crew near Kup\u2019yansk.',
+  },
+  {
+    image: IMG('ov-beirut-r', 900, 600),
+    outlet: 'NOS Nieuwsuur',
+    title: 'The year after',
+    place: 'Beirut, LB',
+    year: '2024',
+    dur: '17m',
+    region: 'Middle East',
+    medium: 'TV · 17 min',
+    desc: 'One street in Mar Mikhael, four years after the explosion.',
+  },
+  {
+    image: IMG('ov-harre-r', 900, 600),
+    outlet: 'EenVandaag',
+    title: 'Binnen bij Harreveld',
+    place: 'Harreveld, NL',
+    year: '2024',
+    dur: '22m',
+    region: 'Netherlands',
+    medium: 'TV · 22 min',
+    desc: 'The first inside report from the facility before it closes.',
+  },
+  {
+    image: IMG('ov-sarajevo', 900, 600),
+    outlet: 'De Correspondent',
+    title: 'Night train, four borders',
+    place: 'Sarajevo, BA',
+    year: '2023',
+    dur: '18m read',
+    region: 'Balkans',
+    medium: 'Written · long-form',
+    desc: 'A rolling long-read filed from four consecutive sleeper carriages.',
+  },
+  {
+    image: IMG('ov-groningen', 900, 600),
+    outlet: 'NRC',
+    title: 'De nieuwe dominee',
+    place: 'Groningen, NL',
+    year: '2023',
+    dur: '14m read',
+    region: 'Netherlands',
+    medium: 'Written · feature',
+    desc: 'A village gets a minister who doesn&rsquo;t believe in God.',
+  },
+  {
+    image: IMG('ov-mosul', 900, 600),
+    outlet: 'NOS Radio 1',
+    title: 'The language of silence',
+    place: 'Mosul, IQ',
+    year: '2023',
+    dur: '29m',
+    region: 'Middle East',
+    medium: 'Radio · 29 min',
+    desc: 'On a translator who no longer wants to speak.',
+  },
+  {
+    image: IMG('ov-warchild', 900, 600),
+    outlet: 'VRT Radio 1',
+    title: 'Small drawings, loud houses',
+    place: 'Akkar, LB',
+    year: '2023',
+    dur: '21m',
+    region: 'Middle East',
+    medium: 'Radio · 21 min',
+    desc: 'A classroom where children draw what they cannot yet say.',
+  },
+  {
+    image: IMG('ov-rotterdam', 900, 600),
+    outlet: 'NRC',
+    title: 'The last shift',
+    place: 'Rotterdam, NL',
+    year: '2022',
+    dur: '16m read',
+    region: 'Netherlands',
+    medium: 'Written · feature',
+    desc: 'The final 24 hours of a shipyard that outlived its city.',
+  },
+  {
+    image: IMG('ov-odessa', 900, 600),
+    outlet: 'VRT Ter Zake',
+    title: 'Black Sea, short wave',
+    place: 'Odessa, UA',
+    year: '2022',
+    dur: '13m',
+    region: 'Eastern Europe',
+    medium: 'TV · 13 min',
+    desc: 'A radio station that will not leave the coast.',
+  },
+];
+
+// ─────────── OverviewA — grid with media previews ───────────
+function OverviewA() {
+  return (
+    <div className="site">
+      <SiteNav active="reportage" />
+
+      {/* Discipline header */}
+      <section style={{ padding: '64px 48px 32px', borderBottom: '1px solid var(--rule)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'end' }}>
+          <div>
+            <Label wide>01 &mdash; Discipline</Label>
+            <h1 className="sans" style={{
+              fontSize: 96, lineHeight: 0.95, letterSpacing: '-0.04em',
+              fontWeight: 500, marginTop: 20,
+            }}>
+              Reportage<span style={{ color: 'var(--accent)' }}>.</span>
+            </h1>
+          </div>
+          <div>
+            <p className="serif" style={{
+              fontSize: 19, lineHeight: 1.55, color: 'var(--ink-2)',
+              maxWidth: 520, marginBottom: 24,
+            }}>
+              Longer reportages in text, radio and television where we were on the ground.
+              Filed for NOS, VRT, EenVandaag, Ter Zake, and written work for Dutch and Belgian
+              dailies. Ordered by year; earliest work at the bottom.
+            </p>
+            <div className="dateline">
+              <span>52 items</span>
+              <span style={{ margin: '0 10px', color: 'var(--ink-4)' }}>·</span>
+              <span>2019&ndash;2026</span>
+              <span style={{ margin: '0 10px', color: 'var(--ink-4)' }}>·</span>
+              <span>Filmed, written, recorded</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Filter bar */}
+      <section style={{
+        padding: '24px 48px', borderBottom: '1px solid var(--rule)',
+        background: 'var(--paper-2)',
+        display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: 32, alignItems: 'center',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <Label>Region</Label>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <Tag variant="accent">All</Tag>
+            <Tag>Eastern Europe</Tag>
+            <Tag>Middle East</Tag>
+            <Tag>Netherlands</Tag>
+            <Tag>Balkans</Tag>
+          </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <Label>Medium</Label>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <Tag>TV</Tag>
+            <Tag>Radio</Tag>
+            <Tag>Written</Tag>
+          </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <Label>Year</Label>
+          <select className="serif" style={{
+            border: '1px solid var(--rule-strong)', background: 'var(--paper)',
+            padding: '6px 12px', fontSize: 13, color: 'var(--fg)',
+            fontFamily: 'var(--font-mono)',
+          }}>
+            <option>All years</option>
+            <option>2024</option>
+            <option>2023</option>
+            <option>2022</option>
+          </select>
+        </div>
+      </section>
+
+      {/* Grid */}
+      <section style={{ padding: '56px 48px 72px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32, rowGap: 56 }}>
+          {REPORTAGE_ITEMS.map((it, i) => (
+            <a key={i} href="#" style={{ display: 'block' }}>
+              <Photo src={it.image} aspect="3 / 2">
+                <span className="chip chip--ghost" style={{ top: 12, left: 12 }}>{it.outlet}</span>
+                <span className="chip" style={{ bottom: 12, right: 12 }}>{it.dur}</span>
+              </Photo>
+              <div style={{ paddingTop: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                  <Dateline>{it.place}</Dateline>
+                  <Dateline>{it.year}</Dateline>
+                </div>
+                <h3 className="sans" style={{
+                  fontSize: 24, lineHeight: 1.1, letterSpacing: '-0.02em',
+                  fontWeight: 500, marginTop: 8,
+                }}>
+                  {it.title}
+                </h3>
+                <p className="serif" style={{
+                  fontSize: 15, lineHeight: 1.5, color: 'var(--ink-2)',
+                  marginTop: 10,
+                }} dangerouslySetInnerHTML={{ __html: it.desc }} />
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <div style={{ paddingTop: 48, display: 'flex', justifyContent: 'center' }}>
+          <a className="btn btn--ghost" href="#">Load 12 more <ArrowRight /></a>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+// ─────────── OverviewB — hybrid (featured + archive table) ───────────
+function OverviewB() {
+  const featured = REPORTAGE_ITEMS[0];
+  const archive = REPORTAGE_ITEMS.slice(1);
+
+  return (
+    <div className="site">
+      <SiteNav active="reportage" />
+
+      {/* Header band */}
+      <section style={{
+        padding: '48px 48px 36px',
+        borderBottom: '1px solid var(--rule)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 32 }}>
+          <Label wide>Discipline</Label>
+          <Rule strong style={{ flex: 1 }} />
+          <span className="dateline">52 items · 2019&ndash;2026</span>
+        </div>
+        <h1 className="sans" style={{
+          fontSize: 132, lineHeight: 0.92, letterSpacing: '-0.045em',
+          fontWeight: 500, marginTop: 32,
+        }}>
+          Reportage<span style={{ color: 'var(--accent)' }}>.</span>
+        </h1>
+        <p className="serif" style={{
+          fontSize: 19, lineHeight: 1.5, color: 'var(--ink-2)',
+          maxWidth: 680, marginTop: 24,
+        }}>
+          Longer reportages in text, radio and television. Filed for NOS, VRT, EenVandaag,
+          Ter Zake, and written work for Dutch and Belgian dailies.
+        </p>
+      </section>
+
+      {/* Featured */}
+      <section style={{ padding: '56px 48px', borderBottom: '1px solid var(--rule)' }}>
+        <div className="row between" style={{ alignItems: 'baseline', marginBottom: 32 }}>
+          <Label wide>Most recent &rarr;</Label>
+          <span className="dateline">28.03.26</span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 48, alignItems: 'center' }}>
+          <Photo src={featured.image} aspect="16 / 10">
+            <span className="chip chip--ghost" style={{ top: 16, left: 16 }}>{featured.outlet}</span>
+            <span className="chip" style={{ bottom: 16, right: 16 }}>{featured.dur}</span>
+          </Photo>
+          <div>
+            <Dateline>{featured.place} · {featured.year}</Dateline>
+            <h2 className="sans" style={{
+              fontSize: 52, lineHeight: 1.0, letterSpacing: '-0.03em',
+              fontWeight: 500, marginTop: 16,
+            }}>
+              {featured.title}
+            </h2>
+            <p className="serif" style={{
+              fontSize: 18, lineHeight: 1.55, color: 'var(--ink-2)',
+              marginTop: 20,
+            }}>
+              Four days with a trench-maintenance crew on the eastern front. The crew moves
+              at night; we moved with them. Filed for VRT&rsquo;s Ter Zake; long-read follows
+              in De Correspondent this weekend.
+            </p>
+            <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
+              <Tag>TV · 11 min</Tag>
+              <Tag>Eastern Europe</Tag>
+              <Tag>2024</Tag>
+            </div>
+            <a className="btn btn--primary" href="#" style={{ marginTop: 28 }}>
+              Watch on VRT <ArrowRight />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Archive table */}
+      <section style={{ padding: '48px 48px 72px' }}>
+        <div className="row between" style={{ alignItems: 'baseline', marginBottom: 24 }}>
+          <h3 className="sans" style={{ fontSize: 28, fontWeight: 500, letterSpacing: '-0.02em' }}>
+            Archive
+          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <div style={{ display: 'flex', gap: 6 }}>
+              <Tag variant="accent">All</Tag>
+              <Tag>TV</Tag>
+              <Tag>Radio</Tag>
+              <Tag>Written</Tag>
+            </div>
+            <span className="dateline" style={{ color: 'var(--ink-4)' }}>·</span>
+            <Dateline>Sort: newest</Dateline>
+          </div>
+        </div>
+
+        <div style={{ border: '1px solid var(--rule-strong)' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '84px 1.4fr 1.2fr 1fr 0.8fr 0.6fr',
+            gap: 24,
+            padding: '14px 24px',
+            background: 'var(--paper-2)',
+            borderBottom: '1px solid var(--rule-strong)',
+          }}>
+            {['Year', 'Title', 'Place', 'Outlet', 'Medium', ''].map((h, i) => (
+              <div key={i} className="label">{h}</div>
+            ))}
+          </div>
+          {archive.map((it, i) => (
+            <a key={i} href="#" style={{
+              display: 'grid',
+              gridTemplateColumns: '84px 1.4fr 1.2fr 1fr 0.8fr 0.6fr',
+              gap: 24,
+              padding: '22px 24px',
+              alignItems: 'center',
+              borderBottom: i < archive.length - 1 ? '1px solid var(--rule)' : 'none',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--paper-2)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+            >
+              <span className="mono" style={{ fontSize: 14, fontWeight: 500 }}>{it.year}</span>
+              <span className="serif" style={{
+                fontSize: 19, letterSpacing: '-0.01em', color: 'var(--fg)',
+              }}>
+                {it.title}
+              </span>
+              <span className="dateline">{it.place}</span>
+              <span className="sans" style={{ fontSize: 13, color: 'var(--ink-2)', fontWeight: 500 }}>
+                {it.outlet}
+              </span>
+              <span className="dateline">{it.medium}</span>
+              <span style={{ textAlign: 'right' }}>
+                <ArrowRight size={12} />
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+Object.assign(window, { OverviewA, OverviewB });
+</script>
+<script type="text/babel" data-presets="react">// site-project.jsx — Project variants
+
+// ─────────── ProjectA — Documentary (video dominant, minimal chrome) ───────────
+function ProjectA() {
+  return (
+    <div className="site">
+      <SiteNav active="documentary" />
+
+      {/* Full-bleed hero video — takes the whole fold, minimal chrome */}
+      <section style={{ position: 'relative', background: '#0D0B08' }}>
+        <div style={{
+          position: 'relative',
+          aspectRatio: '16 / 9',
+          overflow: 'hidden',
+        }}>
+          <img
+            src={IMG('p-beirut-hero', 2400, 1350)}
+            alt=""
+            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.92 }}
+          />
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>\")",
+            mixBlendMode: 'overlay', opacity: 0.18,
+          }} />
+
+          {/* Centered play only — no title overlay competing */}
+          <button style={{
+            position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 140, height: 140, borderRadius: '50%',
+            background: 'rgba(244,239,230,0.95)', color: 'var(--ink)',
+            border: 'none', cursor: 'pointer',
+            display: 'grid', placeItems: 'center',
+          }}>
+            <svg width="38" height="38" viewBox="0 0 32 32" fill="currentColor">
+              <path d="M8 4 L26 16 L8 28 Z" />
+            </svg>
+          </button>
+
+          {/* Bottom scrubber only */}
+          <div style={{
+            position: 'absolute', left: 0, right: 0, bottom: 0,
+            padding: '20px 40px',
+            background: 'linear-gradient(to top, rgba(13,11,8,0.75), transparent)',
+            display: 'flex', alignItems: 'center', gap: 20,
+            color: 'var(--paper)',
+          }}>
+            <span className="mono" style={{ fontSize: 12, letterSpacing: '0.08em', opacity: 0.8 }}>00:00</span>
+            <div style={{ flex: 1, height: 2, background: 'rgba(244,239,230,0.2)' }}>
+              <div style={{ width: '6%', height: '100%', background: 'var(--accent)' }} />
+            </div>
+            <span className="mono" style={{ fontSize: 12, letterSpacing: '0.08em', opacity: 0.8 }}>52:00</span>
+            <span className="chip chip--accent" style={{ position: 'static', marginLeft: 12 }}>Now at IDFA</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Title block — below the video, breathing */}
+      <section style={{ padding: '72px 64px 56px', borderBottom: '1px solid var(--rule)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <Label wide>Documentary · 52 min · 2024 · Dutch / Arabic with EN subs</Label>
+          <h1 className="sans" style={{
+            fontSize: 128, lineHeight: 0.92, letterSpacing: '-0.045em',
+            fontWeight: 500, marginTop: 28,
+          }}>
+            The Sound of<br />
+            <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400 }}>
+              Broken Glass<span style={{ color: 'var(--accent)' }}>.</span>
+            </em>
+          </h1>
+          <div className="mono" style={{
+            fontSize: 13, letterSpacing: '0.1em', color: 'var(--ink-3)',
+            marginTop: 32, textTransform: 'uppercase',
+          }}>
+            Beirut · 33.8938°N 35.5018°E · recorded Feb—Nov 2023
+          </div>
+        </div>
+      </section>
+
+      {/* Lede */}
+      <section style={{ padding: '96px 64px 80px' }}>
+        <div style={{ maxWidth: 780, margin: '0 auto' }}>
+          <p className="serif" style={{
+            fontSize: 28, lineHeight: 1.4, color: 'var(--fg)',
+            letterSpacing: '-0.005em', textWrap: 'pretty',
+          }}>
+            <span style={{
+              float: 'left', fontFamily: 'var(--font-sans)',
+              fontSize: 104, lineHeight: 0.85, fontWeight: 500,
+              marginRight: 16, marginTop: 6, color: 'var(--accent)',
+            }}>
+              F
+            </span>
+            our years after the explosion that tore open the port of Beirut, one
+            street in Mar Mikhael is still learning what the neighbourhood sounds like
+            now. This is a film about glass — what it takes to sweep it up, what
+            you hear when it is gone, and what refuses to be gathered.
+          </p>
+          <p className="serif" style={{
+            fontSize: 18, lineHeight: 1.65, color: 'var(--ink-2)',
+            marginTop: 32,
+          }}>
+            We filmed over eight months with three families who live on Armenia
+            Street. A glazier who no longer sleeps. A kindergarten teacher who has
+            learned to teach in a half-light. A brother and sister who were five
+            and seven on 4 August 2020 and who are now, quietly, ten and twelve.
+          </p>
+          <p className="serif" style={{
+            fontSize: 18, lineHeight: 1.65, color: 'var(--ink-2)',
+            marginTop: 24,
+          }}>
+            The film has no narrator. It moves at the speed of its street. It was
+            made slowly, on purpose.
+          </p>
+        </div>
+      </section>
+
+      {/* Pull quote */}
+      <section style={{
+        padding: '80px 64px', background: 'var(--paper-2)',
+        borderTop: '1px solid var(--rule)', borderBottom: '1px solid var(--rule)',
+      }}>
+        <div style={{ maxWidth: 1040, margin: '0 auto', textAlign: 'center' }}>
+          <span className="dateline" style={{ color: 'var(--accent)' }}>Rami — glazier, 58</span>
+          <p className="serif" style={{
+            fontSize: 44, lineHeight: 1.25, color: 'var(--fg)',
+            fontStyle: 'italic', marginTop: 28, letterSpacing: '-0.01em',
+          }}>
+            "When the windows are whole, the street is louder.
+            You can hear everyone. But we lived for four years
+            with curtains instead of glass. We got used to a
+            softer city. It was not worse. Only quieter."
+          </p>
+        </div>
+      </section>
+
+      {/* Chapters */}
+      <section style={{ padding: '80px 64px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div className="row between" style={{ alignItems: 'baseline', marginBottom: 40 }}>
+            <h3 className="sans" style={{ fontSize: 36, fontWeight: 500, letterSpacing: '-0.02em' }}>
+              Chapters
+            </h3>
+            <span className="dateline">5 chapters · 52 min total</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 20 }}>
+            {[
+              ['01', 'Sweeping', '08:12', 'c-sweep'],
+              ['02', 'The curtain hour', '11:47', 'c-curtain'],
+              ['03', 'School of soft light', '09:33', 'c-school'],
+              ['04', 'Brother, sister', '12:02', 'c-bs'],
+              ['05', 'New glass', '10:24', 'c-newglass'],
+            ].map(([n, t, d, seed], i) => (
+              <a key={i} href="#" style={{ display: 'block' }}>
+                <Photo src={IMG(seed, 600, 400)} aspect="3 / 2">
+                  <span className="chip chip--ghost" style={{ top: 10, left: 10 }}>{n}</span>
+                  <span className="chip" style={{ bottom: 10, right: 10 }}>{d}</span>
+                </Photo>
+                <div style={{ paddingTop: 14 }}>
+                  <div className="sans" style={{ fontSize: 17, fontWeight: 500, color: 'var(--fg)' }}>
+                    {t}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Credits + field notes — consolidated, calm */}
+      <section style={{
+        padding: '80px 64px', background: 'var(--paper-2)',
+        borderTop: '1px solid var(--rule)', borderBottom: '1px solid var(--rule)',
+      }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 72 }}>
+          <div>
+            <Label wide>Credits &amp; field notes</Label>
+            <h3 className="sans" style={{
+              fontSize: 40, lineHeight: 1.05, letterSpacing: '-0.025em',
+              fontWeight: 500, marginTop: 14,
+            }}>
+              How this film<br/>was made.
+            </h3>
+          </div>
+          <div style={{ display: 'grid', gap: 20 }}>
+            {[
+              ['Director', 'Marcel Vink'],
+              ['Camera', 'Marcel Vink / Rami Aoun'],
+              ['Sound', 'Nour Kayali'],
+              ['Editor', 'Lisa de Boer'],
+              ['Producer', 'ontheground'],
+              ['Broadcast', 'NPO 2 Doc · 2024'],
+              ['Shooting dates', '12 February — 04 November 2023 · 24 days on location'],
+              ['Equipment', 'Sony FX6, Rode NTG-5, Zoom F8 Pro. Handheld, available light.'],
+              ['Languages', 'Dutch, Arabic (Levantine), English. Translated on set by Nour Kayali.'],
+              ['Access', 'Permission granted by the residents\u2019 association of Mar Mikhael. No payments to subjects.'],
+              ['Editorial policy', 'Subjects reviewed their own scenes. Three shots were removed at their request.'],
+            ].map(([k, v], i, arr) => (
+              <div key={i} style={{
+                display: 'grid', gridTemplateColumns: '200px 1fr', gap: 24,
+                paddingBottom: i < arr.length - 1 ? 20 : 0,
+                borderBottom: i < arr.length - 1 ? '1px solid var(--rule)' : 'none',
+              }}>
+                <div className="dateline">{k}</div>
+                <div className="serif" style={{ fontSize: 16, color: 'var(--ink-2)', lineHeight: 1.5 }}>{v}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Prev / next */}
+      <section style={{ padding: '56px 64px 80px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+          <a href="#" style={{
+            padding: 32,
+            border: '1px solid var(--rule-strong)',
+            display: 'flex', alignItems: 'center', gap: 24,
+          }}>
+            <span style={{ transform: 'rotate(180deg)' }}><ArrowRight size={16} /></span>
+            <div>
+              <div className="label" style={{ marginBottom: 8 }}>Previous documentary</div>
+              <div className="sans" style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.02em' }}>
+                Liever Stil
+              </div>
+            </div>
+          </a>
+          <a href="#" style={{
+            padding: 32,
+            border: '1px solid var(--rule-strong)',
+            display: 'flex', alignItems: 'center', gap: 24,
+            justifyContent: 'flex-end', textAlign: 'right',
+          }}>
+            <div>
+              <div className="label" style={{ marginBottom: 8 }}>Next documentary</div>
+              <div className="sans" style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.02em' }}>
+                In Ontwikkeling
+              </div>
+            </div>
+            <ArrowRight size={16} />
+          </a>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+// ─────────── ProjectB — Podcast (episode spine) — kept, minor polish ───────────
+function ProjectB() {
+  const eps = [
+    { n: '01', title: 'De plek', dur: '48:22', date: '12.09.24', desc: 'Wat het gebouw voor een kind betekent als je er nergens anders meer naartoe kunt.', progress: 1 },
+    { n: '02', title: 'De dag', dur: '52:10', date: '19.09.24', desc: 'Een ochtend in een leefgroep. Vijftien kinderen, acht begeleiders, één houten tafel.', progress: 1 },
+    { n: '03', title: 'De regels', dur: '47:55', date: '26.09.24', desc: 'Over straf als taal. Over beleid dat door de gang loopt.', progress: 0.6 },
+    { n: '04', title: 'De vlucht', dur: '55:04', date: '03.10.24', desc: 'Weglopen is ook een vorm van blijven. Drie jongens vertellen.', progress: 0 },
+    { n: '05', title: 'De ouders', dur: '49:33', date: '10.10.24', desc: 'Wat je hoort als je aan de keukentafels zit van degenen die niet kwamen.', progress: 0 },
+    { n: '06', title: 'Het besluit', dur: '51:18', date: '17.10.24', desc: 'De dag waarop Harreveld hoorde dat het sluit. Geen kamer waar iemand reageert.', progress: 0 },
+    { n: '07', title: 'De laatste groep', dur: '47:08', date: '24.10.24', desc: 'De vier die blijven tot het licht uit is.', progress: 0 },
+    { n: '08', title: 'Weggaan', dur: '46:55', date: '31.10.24', desc: 'Het afsluitende geluid van een deur, een bus, een stilte.', progress: 0 },
+  ];
+  return (
+    <div className="site">
+      <SiteNav active="podcast" />
+
+      <section style={{ padding: '64px 64px', borderBottom: '1px solid var(--rule)', background: 'var(--paper-2)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 520px', gap: 72, alignItems: 'end' }}>
+          <div>
+            <Label wide>Podcast series · 8 episodes · Nederlands</Label>
+            <h1 className="sans" style={{
+              fontSize: 128, lineHeight: 0.92, letterSpacing: '-0.045em',
+              fontWeight: 500, marginTop: 24,
+            }}>
+              Het einde van<br />
+              <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400 }}>
+                Harreveld<span style={{ color: 'var(--accent)' }}>.</span>
+              </em>
+            </h1>
+            <div className="mono" style={{ fontSize: 13, letterSpacing: '0.08em', color: 'var(--ink-3)', marginTop: 32, textTransform: 'uppercase' }}>
+              Harreveld, NL · 52.0147°N 6.4953°E · recorded mar—oct 2024 · 6h 42m total
+            </div>
+          </div>
+          <div>
+            <Photo src={IMG('harreveld-poster', 800, 800)} aspect="1 / 1" style={{ border: '1px solid var(--rule)' }} />
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: '24px 64px', background: 'var(--ink)', color: 'var(--paper)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'auto 1fr auto auto', gap: 24, alignItems: 'center' }}>
+          <button style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--paper)', color: 'var(--ink)', border: 'none', display: 'grid', placeItems: 'center', cursor: 'pointer' }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2 L13 8 L4 14 Z" /></svg>
+          </button>
+          <div>
+            <div className="sans" style={{ fontSize: 14, fontWeight: 500, color: 'var(--paper)' }}>Ep. 03 — De regels</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 6 }}>
+              <Waveform bars={140} height={22} progress={0.6} color="var(--paper-3)" />
+            </div>
+          </div>
+          <span className="mono" style={{ fontSize: 12, letterSpacing: '0.06em', color: 'var(--paper-3)' }}>28:44 / 47:55</span>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button className="btn btn--ghost btn--sm" style={{ color: 'var(--paper)', borderColor: 'rgba(244,239,230,0.3)' }}>1.0x</button>
+            <button className="btn btn--ghost btn--sm" style={{ color: 'var(--paper)', borderColor: 'rgba(244,239,230,0.3)' }}>Subscribe</button>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: '72px 64px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 320px', gap: 72 }}>
+          <div>
+            <Label wide>About the series</Label>
+            <p className="serif" style={{ fontSize: 22, lineHeight: 1.45, color: 'var(--fg)', marginTop: 16 }}>
+              In juni 2024 hoorde de gesloten jeugdinstelling Harreveld dat zij haar deuren moet sluiten. Acht maanden lang waren we binnen: met begeleiders, met ouders, met de kinderen die daar niet vrijwillig zaten.
+            </p>
+            <p className="serif" style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--ink-2)', marginTop: 24 }}>
+              Een podcast in acht afleveringen over instituties, laatste kansen en de kinderen die tussen beide in stonden. Over een gebouw dat iets wilde doen en niet meer weet voor wie. Over een beroep dat te zwaar werd voor het systeem dat het had uitgevonden.
+            </p>
+            <div style={{ display: 'flex', gap: 10, marginTop: 28 }}>
+              <Tag>Long-form</Tag><Tag>Youth care</Tag><Tag>Netherlands</Tag><Tag>Dutch</Tag>
+            </div>
+          </div>
+          <div>
+            <Label wide>Credits</Label>
+            <div style={{ marginTop: 16, display: 'grid', gap: 14 }}>
+              {[
+                ['Reporter', 'Marcel Vink'], ['Producer', 'Anna Dekker'],
+                ['Sound design', 'Job Jansweijer'], ['Mix & mastering', 'Studio Wonderland'],
+                ['Composer', 'Rutger Hoedemaekers'], ['Fact check', 'Maartje Somers'],
+                ['Published with', 'VPRO · Argos'],
+              ].map(([k, v], i) => (
+                <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, paddingBottom: 12, borderBottom: '1px solid var(--rule)' }}>
+                  <div className="dateline">{k}</div>
+                  <div className="sans" style={{ fontSize: 14, fontWeight: 500, color: 'var(--fg)' }}>{v}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <a className="btn btn--primary" href="#">Subscribe <ArrowRight /></a>
+              <div className="dateline" style={{ color: 'var(--ink-3)', marginTop: 4 }}>
+                Spotify · Apple · Overcast · RSS
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: '48px 64px 72px', borderTop: '1px solid var(--rule)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <div className="row between" style={{ alignItems: 'baseline', marginBottom: 32 }}>
+            <h3 className="sans" style={{ fontSize: 32, fontWeight: 500, letterSpacing: '-0.02em' }}>Episodes</h3>
+            <span className="dateline">8 of 8 published · 6h 42m total</span>
+          </div>
+          <div style={{ display: 'grid', gap: 0 }}>
+            {eps.map((e, i) => (
+              <div key={i} style={{
+                display: 'grid', gridTemplateColumns: '80px 1fr 280px auto auto',
+                gap: 32, padding: '24px 0',
+                borderTop: i === 0 ? '1px solid var(--rule-strong)' : '1px solid var(--rule)',
+                alignItems: 'center',
+              }}>
+                <div className="mono" style={{ fontSize: 20, fontWeight: 500, color: e.progress > 0 ? 'var(--fg)' : 'var(--ink-3)' }}>{e.n}</div>
+                <div>
+                  <div className="sans" style={{ fontSize: 22, fontWeight: 500, letterSpacing: '-0.015em' }}>{e.title}</div>
+                  <div className="serif" style={{ fontSize: 15, color: 'var(--ink-2)', marginTop: 6, maxWidth: 520 }}>{e.desc}</div>
+                </div>
+                <div><Waveform bars={72} height={18} progress={e.progress} color={e.progress > 0 ? 'var(--accent)' : 'var(--ink-4)'} /></div>
+                <div style={{ textAlign: 'right' }}>
+                  <div className="dateline">{e.dur}</div>
+                  <div className="dateline" style={{ color: 'var(--ink-4)', marginTop: 4 }}>{e.date}</div>
+                </div>
+                <button style={{
+                  width: 44, height: 44, borderRadius: '50%',
+                  background: e.progress > 0 ? 'var(--fg)' : 'transparent',
+                  border: e.progress > 0 ? '1px solid var(--fg)' : '1px solid var(--rule-strong)',
+                  color: e.progress > 0 ? 'var(--paper)' : 'var(--fg)',
+                  display: 'grid', placeItems: 'center', cursor: 'pointer',
+                }}>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z" /></svg>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+// ─────────── ProjectC — Photo essay (BIGGER, STRICTER) ───────────
+function ProjectC() {
+  // Professional gallery: edge-to-edge, mixed rhythm, no per-frame captions
+  const captions = [
+    'Het huis, gezien vanaf de overkant. Zaterdagmiddag.',
+    'Gang, 06:42. — Appelhof, Leeuwarden.',
+    'Kamer 14, het licht.',
+    'Handen aan de tafel.',
+    'Binnenplaats, namiddag.',
+    'Het raam waar zij altijd zit.',
+    'Bordjes, donderdag.',
+    'Trappenhuis.',
+    'Gedicht op muur, spreekkamer 2.',
+    'Middagstilte.',
+    'Zuster E. bij het raam.',
+    'Namiddag, kamer 7.',
+    'De tuin, met regen.',
+    'Eetzaal, na de soep.',
+    'Tv-kamer, vrijdag.',
+    'Portret — meneer D.',
+    'Handdoeken.',
+    'De lange gang terug. Laatste dag.',
+  ];
+  const TOTAL = 18;
+  // helper — build props for a clickable frame (auto index & caption lookup)
+  const frame = (seed, w, h, aspect, idx) => ({
+    src: IMG(seed, w, h, { color: true }),
+    hires: IMG(seed, Math.max(w, 2400), Math.round(Math.max(w, 2400) * h / w), { color: true }),
+    aspect, clickable: true,
+    caption: captions[idx - 1],
+    index: idx, total: TOTAL,
+    style: { background: 'var(--paper-3)' },
+  });
+  return (
+    <div className="site">
+      <SiteNav active="photography" />
+
+      {/* Hero — quiet, centered, minimal chrome. Title + one line of prose. */}
+      <section style={{ padding: '120px 64px 56px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 780, margin: '0 auto' }}>
+          <h1 className="sans" style={{
+            fontSize: 88, lineHeight: 0.95, letterSpacing: '-0.04em',
+            fontWeight: 500, margin: 0,
+          }}>
+            Liever{' '}
+            <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400 }}>
+              Stil<span style={{ color: 'var(--accent)' }}>.</span>
+            </em>
+          </h1>
+          <p className="serif" style={{
+            fontSize: 19, lineHeight: 1.55, color: 'var(--ink-2)',
+            marginTop: 28, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto',
+          }}>
+            An assisted-living home in Friesland where the house rule is <em>rather quiet</em>.
+            Forty days, two cameras, a notebook. Thirty-six frames.
+          </p>
+          <div className="dateline" style={{ marginTop: 28, color: 'var(--ink-4)' }}>
+            Leeuwarden, NL · March — May 2023 · 36 frames
+          </div>
+        </div>
+      </section>
+
+      {/* Opening hero image — wide, single statement */}
+      <section style={{ padding: '24px 32px 8px' }}>
+        <Photo {...frame('ls-open', 2400, 1350, '16 / 9', 1)} />
+      </section>
+
+      {/* Gallery — tight spacing, mixed rhythm, no per-frame labels */}
+      <section style={{ padding: '8px 32px 8px' }}>
+        {/* 3-up row */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginTop: 8 }}>
+          <Photo {...frame('ls-01', 900, 1125, '4 / 5', 2)} />
+          <Photo {...frame('ls-02', 900, 1125, '4 / 5', 3)} />
+          <Photo {...frame('ls-03', 900, 1125, '4 / 5', 4)} />
+        </div>
+
+        {/* 2-up, wider landscapes */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, marginTop: 8 }}>
+          <Photo {...frame('ls-04', 1400, 933, '3 / 2', 5)} />
+          <Photo {...frame('ls-05', 1400, 933, '3 / 2', 6)} />
+        </div>
+
+        {/* full-bleed single */}
+        <div style={{ marginTop: 8 }}>
+          <Photo {...frame('ls-06', 2400, 1200, '2 / 1', 7)} />
+        </div>
+
+        {/* 3-up mixed */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginTop: 8 }}>
+          <Photo {...frame('ls-07', 900, 1125, '4 / 5', 8)} />
+          <Photo {...frame('ls-08', 900, 1125, '4 / 5', 9)} />
+          <Photo {...frame('ls-09', 900, 1125, '4 / 5', 10)} />
+        </div>
+
+        {/* 2-up portraits */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, marginTop: 8 }}>
+          <Photo {...frame('ls-10', 1100, 1375, '4 / 5', 11)} />
+          <Photo {...frame('ls-11', 1100, 1375, '4 / 5', 12)} />
+        </div>
+
+        {/* wide landscape */}
+        <div style={{ marginTop: 8 }}>
+          <Photo {...frame('ls-12', 2400, 1350, '16 / 9', 13)} />
+        </div>
+
+        {/* 3-up landscapes */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginTop: 8 }}>
+          <Photo {...frame('ls-13', 900, 600, '3 / 2', 14)} />
+          <Photo {...frame('ls-14', 900, 600, '3 / 2', 15)} />
+          <Photo {...frame('ls-15', 900, 600, '3 / 2', 16)} />
+        </div>
+
+        {/* 2-up square-ish */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8, marginTop: 8 }}>
+          <Photo {...frame('ls-16', 1200, 1200, '1 / 1', 17)} />
+          <Photo {...frame('ls-17', 1200, 1200, '1 / 1', 18)} />
+        </div>
+
+        {/* Closing full-bleed */}
+        <div style={{ marginTop: 8 }}>
+          <Photo {...frame('ls-close', 2400, 1200, '2 / 1', 18)} />
+        </div>
+      </section>
+
+      {/* Index — all captions collected, newspaper-style, at the end only */}
+      <section style={{ padding: '96px 64px 96px' }}>
+        <div style={{ maxWidth: 880, margin: '0 auto' }}>
+          <div className="dateline" style={{ color: 'var(--ink-4)', marginBottom: 24 }}>
+            Index — 18 of 36 frames shown
+          </div>
+          <ol style={{
+            columnCount: 2, columnGap: 48,
+            listStyle: 'none', padding: 0, margin: 0,
+          }}>
+            {captions.map((c, i) => (
+              <li key={i} className="serif" style={{
+                fontSize: 14, lineHeight: 1.5, color: 'var(--ink-2)',
+                marginBottom: 10, breakInside: 'avoid',
+              }}>
+                <span className="mono" style={{ fontSize: 11, letterSpacing: '0.08em', color: 'var(--ink-4)', marginRight: 10 }}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <em style={{ fontStyle: 'italic' }}>{c}</em>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <Footer />
+      <Lightbox />
+    </div>
+  );
+}
+
+Object.assign(window, { ProjectA, ProjectB, ProjectC });
+</script>
+<script type="text/babel" data-presets="react">// site-misc.jsx — Blog overview, Blog post, About, Contact
+
+// ─────────── Blog overview (short-posts + Substack cross-link) ───────────
+function BlogOverview() {
+  const posts = [
+    { date: '14.04.26', kind: 'Production note', title: 'Why episode eight took three months longer than seven', meta: 'Marcel · 6 min' },
+    { date: '12.04.26', kind: 'Short', title: 'A sentence I keep hearing at kitchen tables', meta: 'Marcel · 2 min' },
+    { date: '08.04.26', kind: 'Announcement', title: 'The Sound of Broken Glass — selected for IDFA Paradocs 2026', meta: 'ontheground · 2 min' },
+    { date: '02.04.26', kind: 'Dispatch #47', title: 'On sleeping in cars, and what a dateline is actually for', meta: 'Marcel · 4 min' },
+    { date: '28.03.26', kind: 'Short', title: 'Three things you hear in a building the day it closes', meta: 'Marcel · 3 min' },
+    { date: '22.03.26', kind: 'In production', title: 'Starting fieldwork in Mostar — a new season of Balkan Express', meta: 'Marcel · 3 min' },
+    { date: '15.03.26', kind: 'Short', title: 'A photograph I cannot stop looking at', meta: 'Anna · 1 min' },
+    { date: '11.03.26', kind: 'Craft', title: 'Editing a podcast with no narrator — three things I learned', meta: 'Anna · 7 min' },
+    { date: '04.03.26', kind: 'Off-topic', title: 'A reading list for the spring, mostly about rooms', meta: 'Marcel · 5 min' },
+  ];
+  return (
+    <div className="site">
+      <SiteNav active="blog" />
+
+      <section style={{ padding: '80px 64px 48px', borderBottom: '1px solid var(--rule)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 360px', gap: 72, alignItems: 'end' }}>
+          <div>
+            <Label wide>Logbook · short notes · production</Label>
+            <h1 className="sans" style={{
+              fontSize: 104, lineHeight: 0.95, letterSpacing: '-0.04em',
+              fontWeight: 500, marginTop: 20,
+            }}>
+              Notes from<br />
+              <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400 }}>
+                the field<span style={{ color: 'var(--accent)' }}>.</span>
+              </em>
+            </h1>
+            <p className="serif" style={{ fontSize: 19, lineHeight: 1.55, color: 'var(--ink-2)', marginTop: 28, maxWidth: 640 }}>
+              Short updates, production notes, and announcements. Quick thinking from the field.
+            </p>
+          </div>
+          {/* Substack cross-link card */}
+          <aside style={{ border: '1px solid var(--rule-strong)', padding: 28, background: 'var(--paper-2)' }}>
+            <div className="dateline" style={{ color: 'var(--accent)', marginBottom: 14 }}>
+              Longer reads →
+            </div>
+            <div className="sans" style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.015em', lineHeight: 1.15 }}>
+              Essays &amp; long-form live on{' '}
+              <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400 }}>Substack</em>.
+            </div>
+            <a className="navlink" href="#" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 18,
+              color: 'var(--accent)', fontWeight: 500, fontSize: 15,
+            }}>
+              ontheground.substack.com <ArrowRight size={14} />
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <section style={{ padding: '40px 64px 96px' }}>
+        <div style={{ maxWidth: 1040, margin: '0 auto' }}>
+          {posts.map((p, i) => (
+            <a key={i} href="#" style={{
+              display: 'grid',
+              gridTemplateColumns: '140px 180px 1fr 120px',
+              gap: 32,
+              padding: '28px 0',
+              borderBottom: '1px solid var(--rule)',
+              alignItems: 'baseline',
+            }}>
+              <div className="mono" style={{ fontSize: 16, fontWeight: 500, color: 'var(--fg)', letterSpacing: '0.04em' }}>
+                {p.date}
+              </div>
+              <div className="label" style={{ color: 'var(--accent)' }}>
+                {p.kind}
+              </div>
+              <h2 className="sans" style={{ fontSize: 22, lineHeight: 1.25, letterSpacing: '-0.015em', fontWeight: 500 }}>
+                {p.title}
+              </h2>
+              <div className="dateline" style={{ textAlign: 'right' }}>{p.meta}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+// ─────────── Blog post ───────────
+function BlogPost() {
+  return (
+    <div className="site">
+      <SiteNav active="blog" />
+      <article style={{ padding: '80px 64px 48px' }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
+            <span className="mono" style={{ fontSize: 13, fontWeight: 500, letterSpacing: '0.08em' }}>14.04.26</span>
+            <span className="dateline" style={{ color: 'var(--ink-4)' }}>·</span>
+            <span className="label" style={{ color: 'var(--accent)' }}>Production note</span>
+          </div>
+          <h1 className="sans" style={{
+            fontSize: 60, lineHeight: 1.02, letterSpacing: '-0.03em',
+            fontWeight: 500,
+          }}>
+            Why episode eight took three months longer than seven<span style={{ color: 'var(--accent)' }}>.</span>
+          </h1>
+          <div className="dateline" style={{ marginTop: 28 }}>
+            By Marcel · 6 min read
+          </div>
+        </div>
+      </article>
+
+      <figure style={{ padding: '0 64px', margin: 0, marginBottom: 56 }}>
+        <Photo src={IMG('blog-harre-hero', 1600, 900)} aspect="16 / 9" style={{ maxWidth: 1040, margin: '0 auto' }} />
+        <figcaption className="serif" style={{ fontSize: 13, fontStyle: 'italic', color: 'var(--ink-3)', textAlign: 'center', marginTop: 14 }}>
+          The last hallway at Harreveld, a Thursday in October. — Marcel Vink
+        </figcaption>
+      </figure>
+
+      <div style={{ maxWidth: 680, margin: '0 auto', padding: '0 64px 48px' }}>
+        <p className="serif" style={{ fontSize: 22, lineHeight: 1.55, color: 'var(--fg)', marginBottom: 24 }}>
+          The seventh episode of a series is, usually, the one where you finally know what
+          the series is about. The eighth is the one you thought you already had.
+        </p>
+        <p className="serif" style={{ fontSize: 18, lineHeight: 1.7, color: 'var(--ink-2)', marginBottom: 20 }}>
+          This is a short note about why our last episode took three months longer than the one
+          before it, and what that delay did to the work.
+        </p>
+        <p className="serif" style={{ fontSize: 18, lineHeight: 1.7, color: 'var(--ink-2)', marginBottom: 20 }}>
+          When we finished episode seven, the building had already been told it would close.
+          The closure itself, though, was still a long way off — four months of a slow, official
+          emptying, with the house still full.
+        </p>
+
+        <blockquote style={{ margin: '40px -24px', padding: '24px 32px', borderLeft: '3px solid var(--accent)', background: 'var(--paper-2)' }}>
+          <p className="serif" style={{ fontSize: 22, lineHeight: 1.45, fontStyle: 'italic', color: 'var(--fg)' }}>
+            "You can finish a seventh episode. An eighth, you have to wait for."
+          </p>
+        </blockquote>
+
+        <p className="serif" style={{ fontSize: 18, lineHeight: 1.7, color: 'var(--ink-2)', marginBottom: 20 }}>
+          What we thought would be the final scene — the last group leaving on a bus in November — turned
+          out to be nothing like an ending. The bus went, the building stayed.
+        </p>
+        <h3 className="sans" style={{ fontSize: 28, fontWeight: 500, letterSpacing: '-0.02em', margin: '40px 0 16px' }}>
+          What took the time
+        </h3>
+        <p className="serif" style={{ fontSize: 18, lineHeight: 1.7, color: 'var(--ink-2)', marginBottom: 20 }}>
+          Three things, in order of how much they cost: one conversation re-recorded five weeks after
+          we thought we had it; one rule of our own about not using music under voices; and one promise
+          to a fifteen-year-old boy that we kept by cutting twelve minutes we were very fond of.
+        </p>
+
+        {/* Substack cross-link at end of post */}
+        <div style={{ marginTop: 48, padding: 28, background: 'var(--paper-2)', border: '1px solid var(--rule)' }}>
+          <div className="label" style={{ color: 'var(--accent)', marginBottom: 10 }}>Longer version</div>
+          <div className="serif" style={{ fontSize: 17, lineHeight: 1.5, color: 'var(--fg)' }}>
+            A longer essay on the same subject — about what the "wait" at the end of a series actually costs —
+            is on <a href="#" style={{ color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: 3 }}>our Substack</a>.
+          </div>
+        </div>
+
+        <div style={{ marginTop: 56, paddingTop: 32, borderTop: '1px solid var(--rule-strong)' }}>
+          <div className="dateline">Filed under</div>
+          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+            <Tag>Production</Tag><Tag>Harreveld</Tag><Tag>Podcast</Tag><Tag>Editing</Tag>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
+}
+
+// ─────────── About — unchanged ───────────
+function AboutPage() {
+  return (
+    <div className="site">
+      <SiteNav active="about" />
+
+      <section style={{ padding: '96px 64px 48px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <Label wide>About ontheground</Label>
+          <h1 className="sans" style={{
+            fontSize: 104, lineHeight: 0.95, letterSpacing: '-0.04em',
+            fontWeight: 500, marginTop: 20, maxWidth: 1100,
+          }}>
+            A journalism production house that tells the story{' '}
+            <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400 }}>
+              from where it happens<span style={{ color: 'var(--accent)' }}>.</span>
+            </em>
+          </h1>
+        </div>
+      </section>
+
+      <section style={{ padding: '48px 64px 80px', borderBottom: '1px solid var(--rule)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 72 }}>
+          <div>
+            <Photo src={IMG('about-portrait', 800, 1000, { color: true })} aspect="4 / 5" />
+            <div className="dateline" style={{ marginTop: 14, color: 'var(--ink-3)', fontStyle: 'italic' }}>
+              Marcel Vink, Harreveld, October 2024. — Anna Dekker
+            </div>
+          </div>
+          <div>
+            <Label>Mission</Label>
+            <p className="serif" style={{ fontSize: 26, lineHeight: 1.4, color: 'var(--fg)', marginTop: 16, letterSpacing: '-0.005em' }}>
+              In a Ukrainian trench, in a destroyed neighbourhood in Beirut, but just as
+              much at the lunch table of a closed youth-care facility in the Netherlands.
+              We make slow, contextual journalism in which the human story takes centre stage
+              — no hype, no breaking news, but the detail that lingers.
+            </p>
+
+            <h3 className="sans" style={{ fontSize: 32, fontWeight: 500, letterSpacing: '-0.02em', marginTop: 48 }}>
+              Marcel Vink
+            </h3>
+            <p className="serif" style={{ fontSize: 17, lineHeight: 1.65, color: 'var(--ink-2)', marginTop: 16 }}>
+              Marcel is a journalist, documentary maker and photographer. He worked as a
+              foreign correspondent for NOS and VRT from 2011 to 2019 and founded ontheground
+              in Amsterdam that year.
+            </p>
+            <p className="serif" style={{ fontSize: 17, lineHeight: 1.65, color: 'var(--ink-2)', marginTop: 18 }}>
+              His work has appeared on NPO, VRT, BBC World, ARTE, and in NRC, De Volkskrant,
+              De Morgen and De Correspondent.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: '80px 64px', background: 'var(--paper-2)', borderBottom: '1px solid var(--rule)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <Label wide>Five things we believe</Label>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 32, marginTop: 32 }}>
+            {[
+              ['01', 'Show first, explain second.', 'Image and sound are the work, not illustrations alongside it.'],
+              ['02', 'Proximity over scale.', 'Specific place, specific person, specific moment.'],
+              ['03', 'Time is a credit.', 'Recording date, duration, frame count, coordinates: part of the story.'],
+              ['04', 'Tactile, not slick.', 'Warm paper tones, soft grain, space. No gradients, no glows.'],
+              ['05', 'A thousand no\u2019s for every yes.', 'Nothing decorative. Each element serves the story.'],
+            ].map(([n, h, body], i) => (
+              <div key={i}>
+                <div className="mono" style={{ fontSize: 36, fontWeight: 500, color: 'var(--accent)' }}>{n}</div>
+                <h4 className="sans" style={{ fontSize: 20, fontWeight: 500, letterSpacing: '-0.015em', marginTop: 12 }}>{h}</h4>
+                <p className="serif" style={{ fontSize: 14, lineHeight: 1.55, color: 'var(--ink-2)', marginTop: 8 }}>{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+// ─────────── Contact — calm, deliberate, much less dense ───────────
+function ContactPage() {
+  return (
+    <div className="site">
+      <SiteNav active="contact" />
+      <section style={{ padding: '160px 64px 120px' }}>
+        <div style={{ maxWidth: 980, margin: '0 auto' }}>
+          <Label wide>Contact</Label>
+          <h1 className="sans" style={{
+            fontSize: 128, lineHeight: 0.93, letterSpacing: '-0.045em',
+            fontWeight: 500, marginTop: 24,
+          }}>
+            Get in{' '}
+            <em style={{ fontStyle: 'italic', fontFamily: 'var(--font-serif)', fontWeight: 400 }}>
+              touch<span style={{ color: 'var(--accent)' }}>.</span>
+            </em>
+          </h1>
+          <p className="serif" style={{ fontSize: 21, lineHeight: 1.5, color: 'var(--ink-2)', marginTop: 40, maxWidth: 680 }}>
+            For editorial, press, commissions, or just a hello. We read everything and
+            respond within five working days.
+          </p>
+
+          {/* Single primary email, huge */}
+          <div style={{ marginTop: 88 }}>
+            <div className="label" style={{ marginBottom: 16 }}>Write to</div>
+            <a href="mailto:hello@alwaysontheground.com" className="sans" style={{
+              fontSize: 56, fontWeight: 500, letterSpacing: '-0.025em', lineHeight: 1.1,
+              color: 'var(--fg)',
+              borderBottom: '1px solid var(--rule-strong)',
+              paddingBottom: 8, display: 'inline-block',
+            }}>
+              hello@alwaysontheground.com
+            </a>
+          </div>
+
+          {/* Simple 3-col calm footer of facts */}
+          <div style={{
+            marginTop: 112, paddingTop: 48,
+            borderTop: '1px solid var(--rule)',
+            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 56,
+          }}>
+            <div>
+              <div className="label" style={{ marginBottom: 12 }}>Based in</div>
+              <div className="serif" style={{ fontSize: 17, lineHeight: 1.5 }}>
+                Amsterdam, NL
+              </div>
+              <div className="mono" style={{ fontSize: 11, color: 'var(--ink-3)', letterSpacing: '0.06em', marginTop: 4 }}>
+                52.37°N 4.90°E
+              </div>
+            </div>
+            <div>
+              <div className="label" style={{ marginBottom: 12 }}>Currently</div>
+              <div className="serif" style={{ fontSize: 17, lineHeight: 1.5 }}>
+                Mostar, BA
+              </div>
+              <div className="dateline" style={{ marginTop: 6, color: 'var(--ink-3)' }}>
+                Back 28 April
+              </div>
+            </div>
+            <div>
+              <div className="label" style={{ marginBottom: 12 }}>Also</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {['Substack', 'Instagram', 'Press kit (PDF)'].map(s => (
+                  <a key={s} className="navlink" href="#" style={{ fontSize: 15 }}>{s} →</a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+Object.assign(window, { BlogOverview, BlogPost, AboutPage, ContactPage });
+</script>
+<script type="text/babel">
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection id="home" title="Home">
+        <DCArtboard id="home" label="Home" width={1440} height={3200}>
+          <HomeA />
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="overview" title="Discipline overview">
+        <DCArtboard id="overview-a" label="Overview · Reportage" width={1440} height={2600}>
+          <OverviewA />
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="project" title="Project page">
+        <DCArtboard id="project-a" label="A · Documentary" width={1440} height={3800}>
+          <ProjectA />
+        </DCArtboard>
+        <DCArtboard id="project-b" label="B · Podcast" width={1440} height={3400}>
+          <ProjectB />
+        </DCArtboard>
+        <DCArtboard id="project-c" label="C · Photo essay" width={1440} height={6800}>
+          <ProjectC />
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="blog" title="Blog">
+        <DCArtboard id="blog-index" label="Blog — index" width={1440} height={1900}>
+          <BlogOverview />
+        </DCArtboard>
+        <DCArtboard id="blog-post" label="Blog — single post" width={1440} height={2200}>
+          <BlogPost />
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="pages" title="About & Contact">
+        <DCArtboard id="about" label="About" width={1440} height={2200}>
+          <AboutPage />
+        </DCArtboard>
+        <DCArtboard id="contact" label="Contact" width={1440} height={1600}>
+          <ContactPage />
+        </DCArtboard>
+      </DCSection>
+      <DCPostIt top={24} left={24} rotate={-1.8} width={260}>
+        alwaysontheground.com<br/>
+        design directions · v0.4<br/>
+        Rotterdam · est. 2020
+      </DCPostIt>
+    </DesignCanvas>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+---
+type WorkType = 'documentary' | 'podcast' | 'photography' | 'reportage' | 'commissioned';
+
+interface Props {
+  title: string;
+  types: WorkType[];
+  year: number;
+  hero: string;
+  excerpt: string;
+  slug: string;
+  client?: string;
+  dateline?: string;
+}
+
+const { title, types, year, hero, excerpt, slug, client, dateline } = Astro.props;
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const chipText = client ? `${cap(types[0])} · ${client}` : cap(types[0]);
+const meta = dateline ? `${dateline} · ${year}` : String(year);
+---
+<a
+  href={`/work/${slug}`}
+  style="display: block; cursor: pointer; color: inherit;"
+>
+  <div class="photo" style="aspect-ratio: 10 / 7;">
+    <img src={hero} alt={title} draggable="false" />
+    <span class="chip" style="top: 14px; left: 14px;">{chipText}</span>
+  </div>
+  <div style="padding-top: 20px;">
+    <span class="dateline">{meta}</span>
+    <h4
+      class="sans"
+      style="font-size: 26px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 500; margin-top: 10px;"
+    >
+      {title}
+    </h4>
+    <p
+      class="serif"
+      style="font-size: 16px; line-height: 1.5; color: var(--ink-2); margin-top: 12px;"
+    >
+      {excerpt}
+    </p>
+  </div>
+</a>

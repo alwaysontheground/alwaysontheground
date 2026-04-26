@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Story card — example</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../components.css">
+<style>
+  body { padding: 64px; max-width: 480px; margin: 0 auto; }
+  .card { display: block; cursor: pointer; }
+  .card .media { aspect-ratio: 4 / 3; position: relative; overflow: hidden; }
+  .card .media .placeholder { position: absolute; inset: 0; }
+  .card h3 {
+    font-family: var(--font-sans); font-weight: 500;
+    font-size: 26px; line-height: 1.1; letter-spacing: -0.022em;
+    margin-top: 12px;
+  }
+  .card .blurb {
+    font-family: var(--font-serif); font-size: 16px;
+    line-height: 1.5; color: var(--ink-2); margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<a class="card" href="#">
+  <div class="media">
+    <div class="placeholder">Mar Mikhael — afternoon</div>
+  </div>
+  <div style="padding-top: 14px">
+    <span class="dateline">Beirut, LB · 2024</span>
+    <h3>The Sound of Broken Glass<span style="color:var(--accent)">.</span></h3>
+    <p class="blurb">After the explosion: a neighbourhood learns to listen to itself again.</p>
+  </div>
+</a>
+
+</body>
+</html>

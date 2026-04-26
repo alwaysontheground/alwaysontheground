@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteNav from '../../components/SiteNav.astro';
+import Footer from '../../components/Footer.astro';
+
+const all = await getCollection('work');
+const sorted = [...all].sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+---
+<BaseLayout title="Work — ontheground">
+  <SiteNav />
+
+  <main style="max-width: 1280px; margin: 0 auto; padding: 96px 64px;">
+    <span class="label label--wide">All work · {sorted.length} projects</span>
+    <h1
+      class="sans"
+      style="font-size: 96px; line-height: 0.98; letter-spacing: -0.035em; font-weight: 500; margin-top: 18px;"
+    >
+      Work<span style="color: var(--accent);">.</span>
+    </h1>
+
+    <ol style="list-style: none; padding: 0; margin: 72px 0 0;">
+      {sorted.map((w) => (
+        <li style="border-top: 1px solid var(--rule);">
+          <a
+            href={`/work/${w.data.slug}`}
+            style="display: grid; grid-template-columns: 140px 1fr; gap: 48px; padding: 32px 0; color: inherit;"
+          >
+            <div>
+              <div class="dateline">{w.data.year}</div>
+              {w.data.dateline && (
+                <div class="dateline" style="margin-top: 6px; color: var(--ink-4);">
+                  {w.data.dateline}
+                </div>
+              )}
+            </div>
+            <div>
+              <h2
+                class="sans"
+                style="font-size: 36px; line-height: 1.05; letter-spacing: -0.02em; font-weight: 500;"
+              >
+                {w.data.title}<span style="color: var(--accent);">.</span>
+              </h2>
+              <div class="label" style="margin-top: 12px;">
+                {w.data.types.map(cap).join(' · ')}{w.data.client ? ` · ${w.data.client}` : ''}
+              </div>
+              <p
+                class="serif"
+                style="font-size: 17px; line-height: 1.55; color: var(--ink-2); margin-top: 16px; max-width: 65ch;"
+              >
+                {w.data.excerpt}
+              </p>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ol>
+    <hr class="rule" />
+  </main>
+
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,103 @@
+/* =========================================================
+   ALWAYSONTHEGROUND — site-level utilities
+   Extracted from design-reference/alwaysontheground-directions.html.
+   These compose with tokens.css + components.css; not part of the
+   handoff package, but referenced by the design canvas as project
+   utilities (rows, chips, navlinks, photo with grain, wordmark, etc.).
+   ========================================================= */
+
+/* Label width variant — handoff has .label, the canvas adds wide */
+.label--wide { letter-spacing: var(--ls-label-wide); }
+
+/* Paper grain overlay (composable on any container) */
+.grain { position: relative; isolation: isolate; }
+.grain::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0 0.06  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 260px 260px; mix-blend-mode: multiply; opacity: 0.14; z-index: 2;
+}
+
+/* Photo / media wrapper with grain */
+.photo {
+  position: relative;
+  background: var(--paper-3);
+  overflow: hidden;
+}
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+.photo::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0 0.06  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 260px 260px; mix-blend-mode: multiply; opacity: 0.22;
+  z-index: 2;
+}
+
+/* Media chips (overlay on photos: kind / duration / status) */
+.chip {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 5px 9px;
+  background: rgba(26, 23, 20, 0.85);
+  color: var(--paper);
+  z-index: 3;
+  white-space: nowrap;
+}
+.chip--accent { background: var(--accent); color: var(--paper); }
+.chip--ghost  { background: rgba(244, 239, 230, 0.9); color: var(--ink); }
+.chip--signal {
+  background: var(--signal); color: var(--paper);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.chip--signal::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; display: inline-block;
+}
+
+/* Rules — handoff has none of these named; canvas defines them */
+.rule        { border: none; border-top: var(--stroke-thin)  solid var(--rule);        margin: 0; }
+.rule-strong { border: none; border-top: var(--stroke-thin)  solid var(--rule-strong); margin: 0; }
+.rule-thick  { border: none; border-top: var(--stroke-thick) solid var(--fg);          margin: 0; }
+
+/* Tag variants (.tag is in components.css; --plain is canvas-only) */
+.tag--plain { border: none; padding-left: 0; color: var(--ink-3); }
+
+/* Wordmark */
+.wm {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  color: var(--fg);
+  line-height: 1;
+}
+.wm .dot { color: var(--accent); }
+
+/* Waveform (audio placeholders) */
+.waveform { display: flex; align-items: center; gap: 2px; height: 32px; }
+.waveform .bar { width: 2px; background: currentColor; flex: none; }
+
+/* Utility layout */
+.row     { display: flex; align-items: center; }
+.between { justify-content: space-between; }
+.gap-2   { gap: var(--s-2); }
+.gap-3   { gap: var(--s-3); }
+.gap-4   { gap: var(--s-4); }
+.gap-5   { gap: var(--s-5); }
+.gap-6   { gap: var(--s-6); }
+
+/* Nav links */
+.navlink {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0;
+}
+.navlink:hover         { color: var(--accent); }
+.navlink--active       { color: var(--accent); }
+.navlink--small        { font-size: var(--fs-xs); color: var(--ink-3); }
+
+/* Page-level reset to match the canvas's .site context */
+html, body { height: 100%; }
