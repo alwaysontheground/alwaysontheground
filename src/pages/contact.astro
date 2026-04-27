@@ -1,18 +1,228 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import Footer from '../components/Footer.astro';
 import Dot from '../components/Dot.astro';
+
+const channels = [
+  {
+    name: 'Instagram',
+    handle: '@marcelvdsteen',
+    href: 'https://www.instagram.com/marcelvdsteen/',
+  },
+  {
+    name: 'LinkedIn',
+    handle: 'marcelvandersteen',
+    href: 'https://www.linkedin.com/in/marcelvandersteen/',
+  },
+  {
+    name: 'Bluesky',
+    handle: '@marcelvdsteen.bsky.social',
+    href: 'https://bsky.app/profile/marcelvdsteen.bsky.social',
+  },
+  {
+    name: 'Substack',
+    handle: '@marcelvdsteen',
+    href: 'https://substack.com/@marcelvdsteen',
+  },
+];
 ---
 <BaseLayout title="Contact — ontheground">
-  <main style="padding: 96px 48px; max-width: 1280px; margin: 0 auto;">
-    <span class="label">Placeholder</span>
-    <h1 class="ty-h1" style="margin-top: 16px;">
-      Contact<Dot />
-    </h1>
-    <p class="serif" style="margin-top: 24px; color: var(--ink-2);">
-      <a class="navlink" href="mailto:marcel@alwaysontheground.com">marcel@alwaysontheground.com</a>
+  <SiteNav />
+
+  {/* Hero + lead + email */}
+  <section class="ct-hero">
+    <h1 class="ct-hero__h">Get in touch<Dot /></h1>
+    <p class="ct-hero__lead">
+      For coffee, ideas, work, or a story you think I should hear &mdash; write to me. I&rsquo;m based in Rotterdam, <em>often elsewhere<Dot /></em>
     </p>
-    <p style="margin-top: 32px;">
-      <a class="navlink" href="/">← Back to home</a>
+    <a class="ct-hero__mail" href="mailto:marcel@alwaysontheground.com">
+      marcel@alwaysontheground.com
+    </a>
+    <p class="ct-hero__address">
+      <span>Weena 70, 3012 CM Rotterdam</span>
+      <span class="ct-hero__sep" aria-hidden="true">&middot;</span>
+      <a
+        class="ct-hero__maps"
+        href="https://maps.apple.com/?address=Weena+70,+3012+CM+Rotterdam"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open in Maps
+      </a>
     </p>
-  </main>
+  </section>
+
+  {/* Elsewhere */}
+  <section class="ct-elsewhere">
+    <h3 class="ct-elsewhere__h">Elsewhere<Dot /></h3>
+    <ul class="ct-elsewhere__list">
+      {channels.map((c) => (
+        <li class="ct-elsewhere__row">
+          <a
+            class="ct-elsewhere__name"
+            href={c.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {c.name}
+          </a>
+          <span class="ct-elsewhere__handle">{c.handle}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <Footer />
 </BaseLayout>
+
+<style>
+  /* ── Shared section frame ───────────────────────────────── */
+  .ct-hero,
+  .ct-elsewhere {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  /* ── Hero ───────────────────────────────────────────────── */
+  .ct-hero {
+    padding-top: 112px;
+    padding-bottom: 96px;
+  }
+  .ct-hero__h {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+  }
+  .ct-hero__lead {
+    margin-top: 40px;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    color: var(--ink-2);
+    max-width: 56ch;
+  }
+  .ct-hero__lead em {
+    font-style: italic;
+  }
+  .ct-hero__mail {
+    display: inline-block;
+    margin-top: 28px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--fs-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition: color 0.18s ease;
+    word-break: break-word;
+  }
+  .ct-hero__mail:hover,
+  .ct-hero__mail:focus-visible {
+    color: var(--accent);
+  }
+  .ct-hero__address {
+    margin: 10px 0 0;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--fs-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .ct-hero__sep {
+    color: var(--ink-4);
+  }
+  .ct-hero__maps {
+    color: var(--ink-3);
+    transition: color 0.18s ease;
+  }
+  .ct-hero__maps:hover,
+  .ct-hero__maps:focus-visible {
+    color: var(--accent);
+  }
+
+  /* ── Elsewhere ──────────────────────────────────────────── */
+  .ct-elsewhere {
+    padding-top: 80px;
+    padding-bottom: 112px;
+    border-top: 1px solid var(--rule);
+  }
+  .ct-elsewhere__h {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--fs-h3);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .ct-elsewhere__list {
+    margin: 40px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ct-elsewhere__row {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 32px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .ct-elsewhere__row:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .ct-elsewhere__name {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    transition: color 0.18s ease;
+  }
+  .ct-elsewhere__name:hover,
+  .ct-elsewhere__name:focus-visible {
+    color: var(--accent);
+  }
+  .ct-elsewhere__handle {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xxs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    word-break: break-word;
+  }
+
+  /* ── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .ct-hero,
+    .ct-elsewhere {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .ct-hero {
+      padding-top: 64px;
+      padding-bottom: 64px;
+    }
+    .ct-elsewhere {
+      padding-top: 56px;
+      padding-bottom: 80px;
+    }
+    .ct-elsewhere__list { margin-top: 28px; }
+    .ct-elsewhere__row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 20px 0;
+    }
+  }
+</style>

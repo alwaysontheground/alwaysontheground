@@ -1,15 +1,436 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import Footer from '../components/Footer.astro';
 import Dot from '../components/Dot.astro';
+
+const clients = [
+  {
+    name: 'Cinetree',
+    href: 'https://cinetree.com',
+    kind: 'documentary platform',
+    work: 'The Sound of Broken Glass',
+    format: 'documentary',
+    year: '2021',
+  },
+  {
+    name: 'iHub',
+    href: 'https://ihub.nl',
+    kind: 'youth care institution',
+    work: 'Het einde van Harreveld',
+    format: 'podcast & documentary',
+    year: '2026',
+  },
+  {
+    name: 'VRT',
+    href: 'https://vrt.be',
+    kind: 'Belgian public broadcaster',
+    work: 'De Koerden verliezen hun laatste stukje beloofde land',
+    format: 'reportage',
+    year: '2026',
+  },
+  {
+    name: 'NPO Radio 1',
+    href: 'https://nporadio1.nl',
+    kind: 'Dutch public broadcaster',
+    work: 'Onderwater, achter de dijk',
+    format: 'podcast',
+    year: '2025',
+  },
+  {
+    name: 'De Correspondent',
+    href: 'https://decorrespondent.nl',
+    kind: 'independent journalism platform',
+    work: 'Niemand komt hier toevallig',
+    format: 'photography',
+    year: '2024',
+  },
+  {
+    name: 'Volkskrant Magazine',
+    href: 'https://volkskrant.nl',
+    kind: 'newspaper magazine',
+    work: 'Stille avonden in de Pijp',
+    format: 'reportage',
+    year: '2023',
+  },
+  {
+    name: 'Mauritshuis',
+    href: 'https://mauritshuis.nl',
+    kind: 'art museum',
+    work: 'Dat wat we niet zien',
+    format: 'commissioned documentary',
+    year: '2022',
+  },
+];
+
+const principles = [
+  {
+    head: 'Image and sound are the work.',
+    body: 'The frame arrives before the headline.',
+  },
+  {
+    head: 'Proximity over scale.',
+    body: 'Specific place, specific person, specific moment.',
+  },
+  {
+    head: 'Time is a credit.',
+    body: 'Recording dates, duration, coordinates. The record matters.',
+  },
+  {
+    head: 'Tactile, not slick.',
+    body: 'Warm paper, soft grain, generous space. Never a gradient.',
+  },
+  {
+    head: "A thousand no's for every yes.",
+    body: 'Nothing decorative earns its place.',
+  },
+];
 ---
 <BaseLayout title="About — ontheground">
-  <main style="padding: 96px 48px; max-width: 1280px; margin: 0 auto;">
-    <span class="label">Placeholder</span>
-    <h1 class="ty-h1" style="margin-top: 16px;">
-      About<Dot />
+  <SiteNav />
+
+  {/* Manifest */}
+  <section class="ab-manifest">
+    <h1 class="ab-manifest__h">
+      Ontheground is a journalism production house based in Rotterdam, working from where the story <em>actually happens<Dot /></em>
     </h1>
-    <p style="margin-top: 32px;">
-      <a class="navlink" href="/">← Back to home</a>
+    <p class="ab-manifest__lead">
+      We make documentary, podcast, photography and reportage for Dutch and international broadcasters, magazines and platforms. The work tends to start in the same way: a notebook, a recorder, and the time to listen.
     </p>
-  </main>
+  </section>
+
+  {/* Portrait + bio */}
+  <section class="ab-bio">
+    <figure class="ab-bio__portrait">
+      <img src="/images/about/portrait.jpeg" alt="Marcel van der Steen" />
+    </figure>
+    <div class="ab-bio__text">
+      <h2 class="ab-bio__h">Marcel van der Steen<Dot /></h2>
+      <p class="ab-bio__p">
+        I started ontheground in 2020 as a small production house, after years of working as a journalist and documentary maker. I&rsquo;m based in Rotterdam, and I&rsquo;m often <em>elsewhere</em> &mdash; Beirut, northern Syria, Lebanon, the Dutch countryside, wherever the story takes me.
+      </p>
+      <p class="ab-bio__p">
+        I work in three formats, often at once: documentary, podcast and photography. A project is rarely just one of these. <em>Het einde van Harreveld</em> is a podcast and a documentary. <em>Niemand komt hier toevallig</em> is photography and writing. The format follows what the story needs, not the other way around.
+      </p>
+    </div>
+  </section>
+
+  {/* Principles */}
+  <section class="ab-principles">
+    <h3 class="ab-principles__h">A few things I hold to<Dot /></h3>
+    <ul class="ab-principles__list">
+      {principles.map((p) => (
+        <li class="ab-principles__item">
+          <span class="ab-principles__head">{p.head}</span>{' '}
+          <span class="ab-principles__body">{p.body}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {/* Clients */}
+  <section class="ab-clients">
+    <h3 class="ab-clients__h">Clients &amp; platforms<Dot /></h3>
+    <ul class="ab-clients__list">
+      {clients.map((c) => (
+        <li class="ab-clients__row">
+          <div class="ab-clients__who">
+            <a
+              class="ab-clients__name"
+              href={c.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {c.name}
+            </a>
+            <span class="ab-clients__kind">{c.kind}</span>
+          </div>
+          <div class="ab-clients__what">
+            <span class="ab-clients__work"><em>{c.work}</em></span>
+            <span class="ab-clients__meta">{c.format} &middot; {c.year}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {/* Contact */}
+  <section class="ab-contact">
+    <h3 class="ab-contact__h">Get in touch<Dot /></h3>
+    <a class="ab-contact__mail" href="mailto:marcel@alwaysontheground.com">
+      marcel@alwaysontheground.com
+    </a>
+  </section>
+
+  <Footer />
 </BaseLayout>
+
+<style>
+  /* ── Shared section frame ───────────────────────────────── */
+  .ab-manifest,
+  .ab-bio,
+  .ab-principles,
+  .ab-clients,
+  .ab-contact {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  /* ── Manifest ───────────────────────────────────────────── */
+  .ab-manifest {
+    padding-top: 112px;
+    padding-bottom: 88px;
+  }
+  .ab-manifest__h {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: clamp(40px, 5.5vw, 72px);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    max-width: 22ch;
+  }
+  .ab-manifest__h em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .ab-manifest__lead {
+    margin-top: 40px;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    color: var(--ink-2);
+    max-width: 60ch;
+  }
+
+  /* ── Bio (portrait + text) ──────────────────────────────── */
+  .ab-bio {
+    padding-top: 32px;
+    padding-bottom: 96px;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 64px;
+    align-items: start;
+    border-top: 1px solid var(--rule);
+    padding-top: 80px;
+  }
+  .ab-bio__portrait {
+    margin: 0;
+    background: var(--paper-3);
+  }
+  .ab-bio__portrait img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .ab-bio__h {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: clamp(32px, 3.5vw, 44px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+  .ab-bio__p {
+    margin-top: 24px;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink);
+    max-width: 56ch;
+  }
+  .ab-bio__p em {
+    font-style: italic;
+  }
+
+  /* ── Principles ─────────────────────────────────────────── */
+  .ab-principles {
+    padding-top: 80px;
+    padding-bottom: 96px;
+    border-top: 1px solid var(--rule);
+  }
+  .ab-principles__h {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--fs-h3);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .ab-principles__list {
+    margin: 40px 0 0;
+    padding: 0;
+    list-style: none;
+    max-width: 64ch;
+  }
+  .ab-principles__item {
+    padding: 18px 0;
+    border-top: 1px solid var(--rule);
+    font-size: 18px;
+    line-height: 1.55;
+  }
+  .ab-principles__item:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .ab-principles__head {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+  .ab-principles__body {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+
+  /* ── Clients ────────────────────────────────────────────── */
+  .ab-clients {
+    padding-top: 80px;
+    padding-bottom: 96px;
+    border-top: 1px solid var(--rule);
+  }
+  .ab-clients__h {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--fs-h3);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .ab-clients__list {
+    margin: 40px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ab-clients__row {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 32px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .ab-clients__row:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .ab-clients__who {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .ab-clients__name {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    transition: color 0.18s ease;
+  }
+  .ab-clients__name:hover,
+  .ab-clients__name:focus-visible {
+    color: var(--accent);
+  }
+  .ab-clients__kind {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-style: italic;
+    color: var(--ink-3);
+  }
+  .ab-clients__what {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .ab-clients__work {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .ab-clients__work em {
+    font-style: italic;
+  }
+  .ab-clients__meta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xxs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* ── Contact ────────────────────────────────────────────── */
+  .ab-contact {
+    padding-top: 80px;
+    padding-bottom: 112px;
+    border-top: 1px solid var(--rule);
+  }
+  .ab-contact__h {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--fs-h3);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .ab-contact__mail {
+    display: inline-block;
+    margin-top: 24px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .ab-contact__mail:hover {
+    color: var(--accent);
+  }
+
+  /* ── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .ab-manifest,
+    .ab-bio,
+    .ab-principles,
+    .ab-clients,
+    .ab-contact {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .ab-manifest {
+      padding-top: 64px;
+      padding-bottom: 56px;
+    }
+    .ab-bio {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding-top: 56px;
+      padding-bottom: 64px;
+    }
+    .ab-bio__p { font-size: 17px; }
+    .ab-principles {
+      padding-top: 56px;
+      padding-bottom: 64px;
+    }
+    .ab-principles__list {
+      margin-top: 28px;
+    }
+    .ab-clients {
+      padding-top: 56px;
+      padding-bottom: 64px;
+    }
+    .ab-clients__list {
+      margin-top: 28px;
+    }
+    .ab-clients__row {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 20px 0;
+    }
+    .ab-contact {
+      padding-top: 56px;
+      padding-bottom: 80px;
+    }
+  }
+</style>

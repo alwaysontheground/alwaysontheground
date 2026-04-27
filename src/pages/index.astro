@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteNav from '../components/SiteNav.astro';
 import Footer from '../components/Footer.astro';
 import Dot from '../components/Dot.astro';
+import { currentLocation } from '../data/status';
 
 const allWork = await getCollection('work');
 
@@ -23,7 +24,7 @@ const tiles = allWork
   <section class="hp-hero">
     <h1 class="hp-hero__h">
       We believe in<br />
-      telling <em class="hp-hero__em">true stories</em><Dot />
+      telling <em class="hp-hero__em">true stories<Dot /></em>
     </h1>
   </section>
 
@@ -54,11 +55,19 @@ const tiles = allWork
   <section class="hp-cta">
     <h2 class="hp-cta__line">
       Let&rsquo;s grab coffee. I&rsquo;m in Rotterdam,{' '}
-      <em class="hp-cta__em">or elsewhere</em><Dot />
+      <em class="hp-cta__em">or elsewhere<Dot /></em>
     </h2>
-    <a class="hp-cta__mail" href="mailto:marcel@alwaysontheground.com">
-      marcel@alwaysontheground.com
-    </a>
+    <div class="hp-cta__meta">
+      <a class="hp-cta__mail" href="mailto:marcel@alwaysontheground.com">
+        marcel@alwaysontheground.com
+      </a>
+      {currentLocation && (
+        <Fragment>
+          <span class="hp-cta__sep" aria-hidden="true">·</span>
+          <span class="hp-cta__loc">Currently in {currentLocation}<Dot /></span>
+        </Fragment>
+      )}
+    </div>
   </section>
 
   {/* Newsletter */}
@@ -185,9 +194,16 @@ const tiles = allWork
     font-style: italic;
     font-weight: 400;
   }
-  .hp-cta__mail {
-    display: inline-block;
+  .hp-cta__meta {
     margin-top: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hp-cta__mail,
+  .hp-cta__loc {
     font-family: var(--font-mono);
     font-size: var(--fs-xs);
     letter-spacing: 0.08em;
@@ -195,6 +211,10 @@ const tiles = allWork
     color: var(--ink-3);
   }
   .hp-cta__mail:hover { color: var(--accent); }
+  .hp-cta__sep {
+    font-family: var(--font-mono);
+    color: var(--ink-4);
+  }
 
   @media (max-width: 720px) {
     .hp-cta { padding: 64px 20px; }
