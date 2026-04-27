@@ -1,25 +1,196 @@
 ---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteNav from '../../components/SiteNav.astro';
+import Footer from '../../components/Footer.astro';
 import Dot from '../../components/Dot.astro';
 
-export function getStaticPaths() {
-  return [{ params: { slug: 'placeholder' } }];
+export async function getStaticPaths() {
+  const notes = await getCollection('fieldNotes');
+  return notes.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
 }
 
-const { slug } = Astro.params;
+interface Props {
+  entry: CollectionEntry<'fieldNotes'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const fmtDate = (d: Date) =>
+  d
+    .toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    })
+    .toUpperCase();
 ---
-<BaseLayout title={`${slug} — field notes · ontheground`}>
-  <main style="padding: 96px 48px; max-width: 1280px; margin: 0 auto;">
-    <span class="label">Placeholder · field notes post</span>
-    <h1 class="ty-h1" style="margin-top: 16px;">
-      {slug}<Dot />
-    </h1>
-    <p class="serif" style="margin-top: 24px; color: var(--ink-2); max-width: 60ch;">
-      This is a placeholder for a single field notes post. In step 6 it will be powered by the <code>fieldNotes</code> content collection (Markdown / MDX).
+<BaseLayout title={`${entry.data.title} — field notes · ontheground`} description={entry.data.excerpt}>
+  <SiteNav />
+
+  <article class="fn-article">
+    <header class="fn-head">
+      <p class="fn-head__dateline">
+        <span>{fmtDate(entry.data.publishedAt)}</span>
+        <span class="fn-head__sep" aria-hidden="true">&middot;</span>
+        <span>{entry.data.location}</span>
+      </p>
+      <h1 class="fn-head__title">{entry.data.title}<Dot /></h1>
+    </header>
+
+    {entry.data.hero && (
+      <figure class="fn-hero-img">
+        <img src={entry.data.hero} alt="" />
+      </figure>
+    )}
+
+    <div class="fn-prose">
+      <Content />
+    </div>
+
+    <p class="fn-back">
+      <a class="navlink" href="/field-notes">&larr; Back to field notes</a>
     </p>
-    <p style="margin-top: 32px;">
-      <a class="navlink" href="/field-notes">← Back to field notes</a> &middot;
-      <a class="navlink" href="/">Home</a>
-    </p>
-  </main>
+  </article>
+
+  <Footer />
 </BaseLayout>
+
+<style>
+  .fn-article {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 96px 64px 112px;
+  }
+
+  /* ── Header ─────────────────────────────────────────────── */
+  .fn-head {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .fn-head__dateline {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xxs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .fn-head__sep { color: var(--ink-4); }
+  .fn-head__title {
+    margin-top: 16px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+  }
+
+  /* ── Hero image ─────────────────────────────────────────── */
+  .fn-hero-img {
+    margin: 56px 0 0;
+    background: var(--paper-3);
+  }
+  .fn-hero-img img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ── Prose body ─────────────────────────────────────────── */
+  .fn-prose {
+    max-width: 700px;
+    margin: 56px auto 0;
+    font-family: var(--font-serif);
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .fn-prose :global(p) {
+    margin: 0 0 1.4em;
+  }
+  .fn-prose :global(p:last-child) { margin-bottom: 0; }
+
+  .fn-prose :global(h2) {
+    margin: 2em 0 0.5em;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .fn-prose :global(h3) {
+    margin: 1.8em 0 0.4em;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .fn-prose :global(blockquote) {
+    margin: 1.6em 0;
+    padding: 4px 0 4px 24px;
+    border-left: 2px solid var(--rule-strong);
+    font-style: italic;
+    color: var(--ink-2);
+  }
+  .fn-prose :global(blockquote p) { margin: 0; }
+
+  .fn-prose :global(ul),
+  .fn-prose :global(ol) {
+    margin: 0 0 1.4em;
+    padding-left: 1.4em;
+  }
+  .fn-prose :global(li) { margin: 0.3em 0; }
+
+  .fn-prose :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .fn-prose :global(a:hover) { color: var(--accent-2); }
+
+  .fn-prose :global(em) { font-style: italic; }
+  .fn-prose :global(strong) { font-weight: 600; }
+
+  .fn-prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  .fn-prose :global(img) {
+    margin: 1.6em 0;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ── Back link ──────────────────────────────────────────── */
+  .fn-back {
+    max-width: 700px;
+    margin: 80px auto 0;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .fn-article { padding: 56px 20px 80px; }
+    .fn-hero-img { margin-top: 40px; }
+    .fn-prose {
+      margin-top: 40px;
+      font-size: 18px;
+    }
+    .fn-back { margin-top: 56px; }
+  }
+</style>

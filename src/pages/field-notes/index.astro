@@ -1,18 +1,209 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteNav from '../../components/SiteNav.astro';
+import Footer from '../../components/Footer.astro';
 import Dot from '../../components/Dot.astro';
+
+const notes = (await getCollection('fieldNotes')).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+
+const fmtDate = (d: Date) =>
+  d
+    .toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    })
+    .toUpperCase();
 ---
 <BaseLayout title="Field notes — ontheground">
-  <main style="padding: 96px 48px; max-width: 1280px; margin: 0 auto;">
-    <span class="label">Placeholder</span>
-    <h1 class="ty-h1" style="margin-top: 16px;">
-      Field notes<Dot />
-    </h1>
-    <p class="serif" style="margin-top: 24px; color: var(--ink-2); max-width: 60ch;">
-      Notes from the field, dispatches, photographs that stay with us.
+  <SiteNav />
+
+  {/* Hero */}
+  <section class="fn-hero">
+    <h1 class="fn-hero__h">Field notes<Dot /></h1>
+    <p class="fn-hero__lead">
+      Notes from the field. Short pieces between projects &mdash; observations, fragments, what I&rsquo;m working on or thinking about.
     </p>
-    <p style="margin-top: 32px;">
-      <a class="navlink" href="/">← Back to home</a>
-    </p>
-  </main>
+  </section>
+
+  {/* List */}
+  <section class="fn-list-section">
+    {notes.length === 0 ? (
+      <p class="fn-empty">No notes yet<Dot /></p>
+    ) : (
+      <ul class="fn-list">
+        {notes.map((n) => (
+          <li class="fn-row">
+            <div class="fn-row__when">
+              <span class="fn-row__date">{fmtDate(n.data.publishedAt)}</span>
+              <span class="fn-row__sep" aria-hidden="true">&middot;</span>
+              <span class="fn-row__loc">{n.data.location}</span>
+            </div>
+            <a class="fn-row__what" href={`/field-notes/${n.data.slug}`}>
+              <div class="fn-row__text">
+                <h2 class="fn-row__title">{n.data.title}<Dot /></h2>
+                <p class="fn-row__excerpt">{n.data.excerpt}</p>
+              </div>
+              {n.data.hero && (
+                <div class="fn-row__thumb">
+                  <img src={n.data.hero} alt="" loading="lazy" />
+                </div>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <Footer />
 </BaseLayout>
+
+<style>
+  /* ── Shared section frame ───────────────────────────────── */
+  .fn-hero,
+  .fn-list-section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  /* ── Hero ───────────────────────────────────────────────── */
+  .fn-hero {
+    padding-top: 112px;
+    padding-bottom: 72px;
+  }
+  .fn-hero__h {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+  }
+  .fn-hero__lead {
+    margin-top: 32px;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    color: var(--ink-2);
+    max-width: 60ch;
+  }
+
+  /* ── List ───────────────────────────────────────────────── */
+  .fn-list-section {
+    padding-bottom: 112px;
+    border-top: 1px solid var(--rule);
+    padding-top: 24px;
+  }
+  .fn-empty {
+    margin: 32px 0 0;
+    font-family: var(--font-serif);
+    color: var(--ink-3);
+  }
+  .fn-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .fn-row {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 32px;
+    align-items: start;
+    padding: 28px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .fn-row:first-child { border-top: none; }
+  .fn-row:last-child { border-bottom: 1px solid var(--rule); }
+
+  .fn-row__when {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    padding-top: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xxs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .fn-row__sep { color: var(--ink-4); }
+
+  .fn-row__what {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    color: inherit;
+  }
+  .fn-row__text {
+    flex: 1;
+    min-width: 0;
+  }
+  .fn-row__title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    transition: color 0.18s ease;
+  }
+  .fn-row__what:hover .fn-row__title,
+  .fn-row__what:focus-visible .fn-row__title {
+    color: var(--accent);
+  }
+  .fn-row__excerpt {
+    margin: 10px 0 0;
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink-3);
+    max-width: 64ch;
+  }
+  .fn-row__thumb {
+    flex: none;
+    width: 120px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--paper-3);
+  }
+  .fn-row__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .fn-hero,
+    .fn-list-section {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .fn-hero {
+      padding-top: 64px;
+      padding-bottom: 48px;
+    }
+    .fn-list-section {
+      padding-top: 16px;
+      padding-bottom: 80px;
+    }
+    .fn-row {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      padding: 24px 0;
+    }
+    .fn-row__when { padding-top: 0; }
+    .fn-row__what { gap: 16px; }
+    .fn-row__thumb { width: 96px; }
+  }
+</style>

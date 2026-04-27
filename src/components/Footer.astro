@@ -1,5 +1,6 @@
 ---
 import Wordmark from './Wordmark.astro';
+import Dot from './Dot.astro';
 
 const items = [
   { label: 'Work',        href: '/work' },
@@ -8,44 +9,145 @@ const items = [
   { label: 'Contact',     href: '/contact' },
 ];
 ---
-<footer
-  style="
-    background: var(--paper-2);
-    border-top: 1px solid var(--rule);
-    padding: 40px 48px 28px;
-  "
->
-  <div
-    style="
-      max-width: 1280px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px 32px;
-    "
-  >
-    <div
-      class="serif"
-      style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; color: var(--ink-2); font-size: 15px;"
-    >
-      <Wordmark size={20} href="/" />
-      <span style="color: var(--ink-4);">·</span>
-      <span>Marcel van der Steen</span>
-      <span style="color: var(--ink-4);">·</span>
-      <span>Rotterdam</span>
-      <span style="color: var(--ink-4);">·</span>
-      <a class="navlink" href="mailto:marcel@alwaysontheground.com">marcel@alwaysontheground.com</a>
+<footer class="ft">
+  <div class="ft-inner">
+    {/* Top row: brand + nav · newsletter */}
+    <div class="ft-top">
+      <div class="ft-brand">
+        <Wordmark size={20} href="/" />
+        <nav class="ft-nav">
+          {items.map((x) => (
+            <a class="navlink" href={x.href}>{x.label}</a>
+          ))}
+        </nav>
+      </div>
+
+      <div class="ft-news">
+        <p class="ft-news__line">
+          Stay on the ground<Dot /> Subscribe to field notes.
+        </p>
+        <form class="ft-news__form" onsubmit="event.preventDefault();">
+          <input type="email" name="email" placeholder="your@email" required />
+          <button type="submit" class="btn btn--primary btn--sm">Subscribe</button>
+        </form>
+      </div>
     </div>
-    <nav style="display: flex; flex-wrap: wrap; gap: 24px;">
-      {items.map((x) => <a class="navlink" href={x.href}>{x.label}</a>)}
-    </nav>
-  </div>
-  <div
-    class="dateline"
-    style="max-width: 1280px; margin: 24px auto 0; color: var(--ink-3);"
-  >
-    © ontheground 2020–2026.
+
+    {/* Bottom row: copyright */}
+    <div class="ft-bottom">
+      <div class="dateline ft-copy">&copy; ontheground 2020&ndash;2026.</div>
+    </div>
   </div>
 </footer>
+
+<style>
+  .ft {
+    background: var(--paper-2);
+    border-top: 1px solid var(--rule);
+    padding: 48px 48px 28px;
+  }
+  .ft-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* ── Top row ────────────────────────────────────────────── */
+  .ft-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px 48px;
+  }
+
+  .ft-brand {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 28px;
+  }
+  .ft-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .ft-news {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .ft-news__line {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    text-align: right;
+  }
+  .ft-news__form {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    width: 360px;
+    max-width: 100%;
+  }
+  .ft-news__form input {
+    appearance: none;
+    background: transparent;
+    border: none;
+    padding: 10px 12px;
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--fg);
+    outline: none;
+    flex: 1;
+    min-width: 180px;
+  }
+  .ft-news__form .btn {
+    border-radius: 0;
+    border-width: 0;
+  }
+
+  /* ── Bottom row ─────────────────────────────────────────── */
+  .ft-bottom {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px 24px;
+  }
+  .ft-copy {
+    color: var(--ink-3);
+  }
+
+  /* ── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .ft { padding: 40px 20px 24px; }
+    .ft-top {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 28px;
+    }
+    .ft-brand {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .ft-news {
+      align-items: stretch;
+      width: 100%;
+    }
+    .ft-news__line { text-align: left; }
+    .ft-news__form { width: 100%; }
+    .ft-bottom {
+      margin-top: 28px;
+      padding-top: 20px;
+    }
+  }
+</style>

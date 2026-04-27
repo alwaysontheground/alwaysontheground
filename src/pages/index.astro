@@ -70,17 +70,6 @@ const tiles = allWork
     </div>
   </section>
 
-  {/* Newsletter */}
-  <section class="hp-news">
-    <p class="hp-news__line">
-      Stay on the ground<Dot /> Subscribe to field notes.
-    </p>
-    <form class="hp-news__form" onsubmit="event.preventDefault();">
-      <input type="email" name="email" placeholder="your@email" required />
-      <button type="submit" class="btn btn--primary btn--sm">Subscribe</button>
-    </form>
-  </section>
-
   <Footer />
 </BaseLayout>
 
@@ -220,52 +209,4 @@ const tiles = allWork
     .hp-cta { padding: 64px 20px; }
   }
 
-  /* ── Newsletter ───────────────────────────────────────── */
-  .hp-news {
-    padding: 56px 64px;
-    max-width: 1280px;
-    margin: 0 auto;
-    border-top: 1px solid var(--rule);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px 40px;
-  }
-  .hp-news__line {
-    margin: 0;
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 22px;
-    letter-spacing: -0.015em;
-    color: var(--fg);
-  }
-  .hp-news__form {
-    display: flex;
-    align-items: stretch;
-    border: 1px solid var(--rule-strong);
-    background: var(--paper);
-    min-width: 320px;
-  }
-  .hp-news__form input {
-    appearance: none;
-    background: transparent;
-    border: none;
-    padding: 12px 14px;
-    font-family: var(--font-serif);
-    font-size: 14px;
-    color: var(--fg);
-    outline: none;
-    flex: 1;
-    min-width: 200px;
-  }
-  .hp-news__form .btn {
-    border-radius: 0;
-    border-width: 0;
-  }
-
-  @media (max-width: 720px) {
-    .hp-news { padding: 48px 20px; }
-    .hp-news__form { width: 100%; }
-  }
 </style>

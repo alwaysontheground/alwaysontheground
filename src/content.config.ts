@@ -35,9 +35,12 @@ const fieldNotes = defineCollection({
   schema: z.object({
     title: z.string(),
     slug: z.string(),
-    excerpt: z.string(),
     publishedAt: z.coerce.date(),
+    location: z.string(),
+    excerpt: z.string(),
     hero: z.string().optional(),
+    audio: z.string().optional(),
+    tags: z.array(z.string()).optional(),
   }),
 });
 
