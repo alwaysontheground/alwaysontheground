@@ -1,4 +1,6 @@
 ---
+import Dot from './Dot.astro';
+
 interface Props {
   size?: number;
   weight?: number;
@@ -10,10 +12,10 @@ const style = `font-size: ${size}px; font-weight: ${weight};`;
 ---
 {href ? (
   <a href={href} class="wm" style={style}>
-    ontheground{showDot && <span class="dot">.</span>}
+    ontheground{showDot && <Dot />}
   </a>
 ) : (
   <span class="wm" style={style}>
-    ontheground{showDot && <span class="dot">.</span>}
+    ontheground{showDot && <Dot />}
   </span>
 )}

@@ -1,6 +1,6 @@
 # Content authoring conventions
 
-Notes for adding/editing entries in `work/` and `journal/`.
+Notes for adding/editing entries in `work/` and `field-notes/`.
 
 ## Work entries
 
@@ -39,9 +39,11 @@ demoted to the Selected work grid.
 See `work/IMAGES.txt` for which heroes are real vs. picsum dummies and how to
 swap them.
 
-## Journal entries
+## Field notes entries
 
 Schema: `title, slug, excerpt, publishedAt, hero (optional)`. No first-type
-convention — journal posts have no `types` field. Collection is currently
+convention — field notes posts have no `types` field. Collection is currently
 empty; the first post will silence the harmless `[glob-loader] No files found`
-warning at build time.
+warning at build time. Lookup name is `fieldNotes` (camelCase) via
+`getCollection('fieldNotes')`; on-disk dir and route are kebab-case
+(`src/content/field-notes/`, `/field-notes/[slug]`).

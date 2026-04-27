@@ -22,11 +22,16 @@ const work = defineCollection({
     featured: z.boolean().default(false),
     dateline: z.string().optional(),
     publishedAt: z.coerce.date(),
+    homepage: z.boolean().default(false),
+    homepageImage: z.string().optional(),
+    homepageOrder: z.number().optional(),
+    homepageFormat: z.enum(['narrow', 'wide']).default('narrow'),
+    homepageImageAspect: z.string().default('16/11'),
   }),
 });
 
-const journal = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/journal' }),
+const fieldNotes = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/field-notes' }),
   schema: z.object({
     title: z.string(),
     slug: z.string(),
@@ -36,4 +41,4 @@ const journal = defineCollection({
   }),
 });
 
-export const collections = { work, journal };
+export const collections = { work, fieldNotes };

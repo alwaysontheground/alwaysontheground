@@ -8,4 +8,5 @@ excerpt: "Restorers spending months on a single corner of a painting, and what t
 hero: "https://picsum.photos/seed/otg-mauritshuis/1600/1100?grayscale"
 dateline: "Den Haag, NL"
 publishedAt: 2022-10-30
+homepage: false
 ---

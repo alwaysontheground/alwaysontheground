@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteNav from '../../components/SiteNav.astro';
 import Footer from '../../components/Footer.astro';
+import Dot from '../../components/Dot.astro';
 
 export async function getStaticPaths() {
   const all = await getCollection('work');
@@ -38,7 +39,7 @@ const metaLine = metaParts.join(' · ');
       class="sans"
       style="font-size: 84px; line-height: 0.98; letter-spacing: -0.035em; font-weight: 500; margin-top: 24px; max-width: 1100px;"
     >
-      {entry.data.title}<span style="color: var(--accent);">.</span>
+      {entry.data.title}<Dot />
     </h1>
 
     <div class="dateline" style="margin-top: 28px;">{metaLine}</div>

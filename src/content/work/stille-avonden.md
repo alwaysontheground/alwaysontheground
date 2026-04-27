@@ -8,4 +8,8 @@ excerpt: "An Amsterdam neighbourhood quietly tilting from buzz to silence, seen 
 hero: "https://picsum.photos/seed/otg-pijp/1600/1100?grayscale"
 dateline: "Amsterdam, NL"
 publishedAt: 2023-05-19
+homepage: true
+homepageOrder: 5
+homepageFormat: wide
+homepageImageAspect: "16/11"
 ---

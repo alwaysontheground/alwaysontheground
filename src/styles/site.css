@@ -72,7 +72,6 @@
   color: var(--fg);
   line-height: 1;
 }
-.wm .dot { color: var(--accent); }
 
 /* Waveform (audio placeholders) */
 .waveform { display: flex; align-items: center; gap: 2px; height: 32px; }

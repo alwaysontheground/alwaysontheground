@@ -8,4 +8,8 @@ excerpt: "Four episodes on salt seepage in Zeeland, and farmers who can no longe
 hero: "https://picsum.photos/seed/otg-zeeland/1600/1100?grayscale"
 dateline: "Zeeland, NL"
 publishedAt: 2025-04-11
+homepage: true
+homepageOrder: 6
+homepageFormat: narrow
+homepageImageAspect: "16/11"
 ---

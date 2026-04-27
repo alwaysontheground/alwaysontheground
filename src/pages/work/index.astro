@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteNav from '../../components/SiteNav.astro';
 import Footer from '../../components/Footer.astro';
+import Dot from '../../components/Dot.astro';
 
 const all = await getCollection('work');
 const sorted = [...all].sort(
@@ -20,7 +21,7 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       class="sans"
       style="font-size: 96px; line-height: 0.98; letter-spacing: -0.035em; font-weight: 500; margin-top: 18px;"
     >
-      Work<span style="color: var(--accent);">.</span>
+      Work<Dot />
     </h1>
 
     <ol style="list-style: none; padding: 0; margin: 72px 0 0;">
@@ -43,7 +44,7 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
                 class="sans"
                 style="font-size: 36px; line-height: 1.05; letter-spacing: -0.02em; font-weight: 500;"
               >
-                {w.data.title}<span style="color: var(--accent);">.</span>
+                {w.data.title}<Dot />
               </h2>
               <div class="label" style="margin-top: 12px;">
                 {w.data.types.map(cap).join(' · ')}{w.data.client ? ` · ${w.data.client}` : ''}
