@@ -43,6 +43,18 @@ const work = defineCollection({
     homepageOrder: z.number().optional(),
     homepageFormat: z.enum(['narrow', 'wide']).default('narrow'),
     homepageImageAspect: z.string().default('16/11'),
+    videoEmbed: z.string().optional(),
+    externalLink: z.string().optional(),
+    externalLinkLabel: z.string().optional(),
+    gallery: z
+      .array(
+        z.object({
+          image: z.string(),
+          aspect: z.string().default('4/5'),
+          caption: z.string().optional(),
+        })
+      )
+      .optional(),
   }),
 });
 

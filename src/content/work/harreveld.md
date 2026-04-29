@@ -14,4 +14,6 @@ homepage: true
 homepageOrder: 1
 homepageFormat: wide
 homepageImageAspect: "1/1"
+externalLink: "https://open.spotify.com/show/0kbYTNQb4Pb1rPbbaF0pT4"
+externalLinkLabel: "Listen on Spotify"
 ---

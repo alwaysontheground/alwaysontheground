@@ -25,57 +25,368 @@ if (entry.data.dateline) metaParts.push(entry.data.dateline);
 metaParts.push(String(entry.data.year));
 if (entry.data.client) metaParts.push(entry.data.client);
 const metaLine = metaParts.join(' · ');
+
+const { discipline, gallery, videoEmbed, externalLink, externalLinkLabel } = entry.data;
+const isPodcast = discipline === 'podcast';
+const showGallery = discipline === 'photography' && Array.isArray(gallery) && gallery.length > 0;
+const FORMAT_PATTERN = ['wide', 'narrow', 'narrow', 'wide', 'narrow'];
+
+const ctaLabel = externalLinkLabel ?? 'Visit source';
 ---
 <BaseLayout title={`${entry.data.title} — ontheground`}>
   <SiteNav />
 
-  <article style="max-width: 1280px; margin: 0 auto; padding: 64px 64px 96px;">
-    <a class="navlink" href="/work" style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 40px;">
-      ← Back to work
-    </a>
+  <article class="proj">
+    <a class="navlink proj__back" href="/work">← Back to work</a>
 
     <span class="label label--wide">{typesLabel}</span>
 
-    <h1
-      class="sans"
-      style="font-size: 84px; line-height: 0.98; letter-spacing: -0.035em; font-weight: 500; margin-top: 24px; max-width: 1100px;"
-    >
-      {entry.data.title}<Dot />
-    </h1>
+    {isPodcast ? (
+      <>
+        <div class="proj-podcast-row" data-lightbox-group>
+          <button
+            type="button"
+            class="proj-podcast-row__cover"
+            data-lightbox-src={entry.data.hero}
+            data-lightbox-caption={entry.data.dateline ?? entry.data.title}
+            aria-label={`Open ${entry.data.title} cover in viewer`}
+          >
+            <img
+              src={entry.data.hero}
+              alt={entry.data.title}
+              draggable="false"
+              data-photo-asset
+            />
+          </button>
+          <div class="proj-podcast-row__text">
+            <div class="dateline proj-podcast-row__meta">{metaLine}</div>
+            <h1 class="proj__h proj__h--podcast">
+              {entry.data.title}<Dot />
+            </h1>
+            <p class="serif proj-podcast-row__excerpt">{entry.data.excerpt}</p>
+            <div class="serif proj-podcast-row__body">
+              <Content />
+            </div>
+          </div>
+        </div>
 
-    <div class="dateline" style="margin-top: 28px;">{metaLine}</div>
+        {externalLink && (
+          <div class="proj__cta-wrap">
+            <a
+              class="proj-cta"
+              href={externalLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {ctaLabel}<Dot />
+            </a>
+          </div>
+        )}
+      </>
+    ) : (
+      <>
+        <h1 class="proj__h">
+          {entry.data.title}<Dot />
+        </h1>
 
-    <div class="photo" style="aspect-ratio: 16 / 9; margin-top: 56px;" data-lightbox-group>
-      <button
-        type="button"
-        style="display: block; width: 100%; height: 100%; padding: 0; border: 0; background: transparent; cursor: pointer;"
-        data-lightbox-src={entry.data.hero}
-        data-lightbox-caption={entry.data.dateline ?? entry.data.title}
-        aria-label={`Open ${entry.data.title} in viewer`}
-      >
-        <img
-          src={entry.data.hero}
-          alt={entry.data.title}
-          draggable="false"
-          data-photo-asset
-          style="width: 100%; height: 100%; object-fit: cover;"
-        />
-      </button>
-    </div>
+        <div class="dateline proj__meta">{metaLine}</div>
 
-    <p
-      class="serif"
-      style="font-size: 22px; line-height: 1.5; color: var(--ink-2); margin-top: 56px; max-width: 65ch;"
-    >
-      {entry.data.excerpt}
-    </p>
+        {showGallery ? (
+          <div class="proj-gallery" data-lightbox-group>
+            {gallery!.map((g, i) => {
+              const format = FORMAT_PATTERN[i % FORMAT_PATTERN.length];
+              const cap = g.caption ?? '';
+              return (
+                <button
+                  type="button"
+                  class:list={['proj-gallery__tile', `proj-gallery__tile--${format}`]}
+                  style={`aspect-ratio: ${g.aspect};`}
+                  data-lightbox-src={g.image}
+                  data-lightbox-caption={cap}
+                  aria-label={cap ? `Open ${cap} in viewer` : 'Open photograph in viewer'}
+                >
+                  <img
+                    src={g.image}
+                    alt={cap || entry.data.title}
+                    draggable="false"
+                    data-photo-asset
+                  />
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div class="proj__photo" data-lightbox-group>
+            <button
+              type="button"
+              class="proj__photo-btn"
+              data-lightbox-src={entry.data.hero}
+              data-lightbox-caption={entry.data.dateline ?? entry.data.title}
+              aria-label={`Open ${entry.data.title} in viewer`}
+            >
+              <img
+                src={entry.data.hero}
+                alt={entry.data.title}
+                draggable="false"
+                data-photo-asset
+              />
+            </button>
+          </div>
+        )}
 
-    <div class="serif" style="max-width: 65ch; margin-top: 48px; font-size: 17px; line-height: 1.6;">
-      <Content />
-    </div>
+        {discipline === 'documentary' && videoEmbed && (
+          <div class="proj-embed proj-embed--video">
+            <iframe
+              src={videoEmbed}
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              loading="lazy"
+              title={`${entry.data.title} — video`}
+            />
+          </div>
+        )}
+
+        <p class="serif proj__excerpt">{entry.data.excerpt}</p>
+
+        <div class="serif proj__body">
+          <Content />
+        </div>
+
+        {externalLink && (
+          <div class="proj__cta-wrap">
+            <a
+              class="proj-cta"
+              href={externalLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {ctaLabel}<Dot />
+            </a>
+          </div>
+        )}
+      </>
+    )}
   </article>
 
   <Lightbox />
 
   <Footer />
 </BaseLayout>
+
+<style>
+  .proj {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 64px 96px;
+  }
+  .proj__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 40px;
+  }
+  .proj__h {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 84px;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    margin-top: 24px;
+    max-width: 1100px;
+  }
+  .proj__meta {
+    margin-top: 28px;
+  }
+
+  .proj__photo {
+    aspect-ratio: 16 / 9;
+    margin-top: 56px;
+  }
+  .proj__photo-btn {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .proj__photo-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+  .proj__photo-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
+
+  .proj-gallery {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: dense;
+    align-items: start;
+    gap: 24px;
+  }
+  .proj-gallery__tile {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--paper-3);
+    overflow: hidden;
+    display: block;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+  }
+  .proj-gallery__tile:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .proj-gallery__tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
+  .proj-gallery__tile--narrow { grid-column: span 1; }
+  .proj-gallery__tile--wide   { grid-column: span 2; }
+
+  /* ── Podcast layout: cover left, text right ── */
+  .proj-podcast-row {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .proj-podcast-row__cover {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--paper-3);
+    overflow: hidden;
+    display: block;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+  }
+  .proj-podcast-row__cover:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+  .proj-podcast-row__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
+  .proj-podcast-row__text {
+    min-width: 0;
+  }
+  .proj-podcast-row__meta {
+    margin-top: 0;
+  }
+  .proj__h--podcast {
+    font-size: clamp(40px, 4.2vw, 56px);
+    margin-top: 16px;
+    max-width: none;
+  }
+  .proj-podcast-row__excerpt {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin-top: 28px;
+    max-width: 60ch;
+  }
+  .proj-podcast-row__body {
+    margin-top: 32px;
+    font-size: 17px;
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+
+  .proj-embed {
+    margin: 56px auto 0;
+  }
+  .proj-embed--video {
+    max-width: 900px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+  .proj-embed--video iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .proj__excerpt {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin-top: 56px;
+    max-width: 65ch;
+  }
+  .proj__body {
+    max-width: 65ch;
+    margin-top: 48px;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .proj__cta-wrap {
+    margin-top: 56px;
+  }
+  .proj-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 20px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+    border: 1px solid var(--rule);
+    transition: color 0.18s ease, border-color 0.18s ease;
+  }
+  .proj-cta:hover,
+  .proj-cta:focus-visible {
+    color: var(--accent);
+    border-color: var(--ink-3);
+  }
+
+  @media (max-width: 720px) {
+    .proj { padding: 40px 20px 80px; }
+    .proj__h { font-size: 48px; }
+    .proj-gallery {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .proj-embed { margin-top: 40px; }
+    .proj__excerpt { font-size: 19px; margin-top: 40px; }
+
+    .proj-podcast-row {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .proj-podcast-row__cover {
+      max-width: 320px;
+    }
+  }
+</style>
