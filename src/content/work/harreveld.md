@@ -2,7 +2,8 @@
 title: "Het einde van Harreveld"
 slug: "harreveld"
 year: 2026
-types: ["podcast", "documentary", "commissioned"]
+discipline: "podcast"
+types: ["podcast", "documentary"]
 client: "iHub"
 excerpt: "Inside the closed youth-care institution Harreveld, where stuck adolescents share daily life with caretakers carrying their own stories."
 hero: "/images/work/harreveld-cover.jpeg"

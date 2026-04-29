@@ -1,15 +1,145 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import Footer from '../components/Footer.astro';
 import Dot from '../components/Dot.astro';
+
+const allWork = await getCollection('work');
+const tiles = allWork
+  .filter((w) => w.data.discipline === 'podcast')
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const FORMAT_PATTERN = ['wide', 'narrow', 'narrow', 'wide', 'narrow'];
+const ASPECT_PATTERN = ['16/11', '4/5', '4/5', '1/1', '16/11'];
 ---
 <BaseLayout title="Podcast — ontheground">
-  <main style="padding: 96px 48px; max-width: 1280px; margin: 0 auto;">
-    <span class="label">Placeholder · discipline</span>
-    <h1 class="ty-h1" style="margin-top: 16px;">
-      Podcast<Dot />
-    </h1>
-    <p style="margin-top: 32px;">
-      <a class="navlink" href="/">← Back to home</a>
+  <SiteNav />
+
+  <section class="dp-hero">
+    <h1 class="dp-hero__h">Podcast<Dot /></h1>
+    <p class="dp-hero__lead">
+      Stories you can listen to. Series and standalone episodes from the field.
     </p>
-  </main>
+  </section>
+
+  <section class="dp-grid-section">
+    <div class="dp-grid">
+      {tiles.map((w, i) => {
+        const format = FORMAT_PATTERN[i % FORMAT_PATTERN.length];
+        const aspect = ASPECT_PATTERN[i % ASPECT_PATTERN.length];
+        return (
+          <a
+            href={`/work/${w.data.slug}`}
+            class:list={['dp-tile', `dp-tile--${format}`]}
+            style={`aspect-ratio: ${aspect};`}
+            aria-label={w.data.title}
+          >
+            <img
+              src={w.data.homepageImage ?? w.data.hero}
+              alt={w.data.title}
+              draggable="false"
+            />
+            <div class="dp-tile__overlay">
+              <span class="dp-tile__title">{w.data.title}<Dot /></span>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <Footer />
 </BaseLayout>
+
+<style>
+  .dp-hero {
+    padding: 112px 64px 64px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .dp-hero__h {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+  }
+  .dp-hero__lead {
+    margin-top: 32px;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    color: var(--ink-2);
+    max-width: 56ch;
+  }
+
+  .dp-grid-section {
+    padding: 0 64px 96px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .dp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: dense;
+    align-items: start;
+    gap: 24px;
+  }
+
+  .dp-tile {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--paper-3);
+    color: inherit;
+    cursor: pointer;
+  }
+  .dp-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .dp-tile--narrow { grid-column: span 1; }
+  .dp-tile--wide   { grid-column: span 2; }
+
+  .dp-tile__overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 22px 22px 20px;
+    background: linear-gradient(
+      to top,
+      rgba(26, 23, 20, 0.72) 0%,
+      rgba(26, 23, 20, 0.32) 60%,
+      rgba(26, 23, 20, 0) 100%
+    );
+    color: var(--paper);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    pointer-events: none;
+  }
+  .dp-tile:hover .dp-tile__overlay,
+  .dp-tile:focus-visible .dp-tile__overlay {
+    opacity: 1;
+  }
+  .dp-tile__title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  @media (max-width: 720px) {
+    .dp-hero { padding: 64px 20px 48px; }
+    .dp-grid-section { padding: 0 20px 64px; }
+    .dp-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }
+</style>

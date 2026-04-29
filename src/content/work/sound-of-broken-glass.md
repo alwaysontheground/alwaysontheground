@@ -2,6 +2,7 @@
 title: "The Sound of Broken Glass"
 slug: "sound-of-broken-glass"
 year: 2021
+discipline: "documentary"
 types: ["documentary"]
 client: "Cinetree"
 excerpt: "Beirut tries to glue the shards back together after the harbour explosion that levelled half a city."

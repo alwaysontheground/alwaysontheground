@@ -1,15 +1,304 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import Footer from '../components/Footer.astro';
 import Dot from '../components/Dot.astro';
+
+const GENRE_TO_PATH: Record<string, string> = {
+  portrait: '/photography/portraits',
+  documentary: '/photography/documentary',
+  street: '/photography/street',
+  commissioned: '/photography/commissioned',
+};
+
+const GENRE_TO_LABEL: Record<string, string> = {
+  portrait: 'Portraits',
+  documentary: 'Documentary',
+  street: 'Street',
+  commissioned: 'Commissioned',
+};
+
+type LandingTile =
+  | {
+      kind: 'work';
+      title: string;
+      image: string;
+      href: string;
+      date: Date;
+    }
+  | {
+      kind: 'photo';
+      title: string;
+      image: string;
+      href: string;
+      collectionLabel: string;
+      date: Date;
+    };
+
+const allWork = await getCollection('work');
+const workTiles: LandingTile[] = allWork
+  .filter((w) => w.data.discipline === 'photography')
+  .map((w) => ({
+    kind: 'work' as const,
+    title: w.data.title,
+    image: w.data.homepageImage ?? w.data.hero,
+    href: `/work/${w.data.slug}`,
+    date: w.data.publishedAt,
+  }));
+
+const allPhotos = await getCollection('photos');
+const photoTiles: LandingTile[] = (
+  ['portrait', 'documentary', 'street', 'commissioned'] as const
+).flatMap((genre) =>
+  allPhotos
+    .filter((p) => p.data.genre === genre)
+    .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+    .slice(0, 2)
+    .map((p) => ({
+      kind: 'photo' as const,
+      title: p.data.title,
+      image: p.data.image,
+      href: GENRE_TO_PATH[genre],
+      collectionLabel: GENRE_TO_LABEL[genre],
+      date: p.data.publishedAt,
+    }))
+);
+
+const tiles: LandingTile[] = [...workTiles, ...photoTiles].sort(
+  (a, b) => b.date.getTime() - a.date.getTime()
+);
+
+const FORMAT_PATTERN = ['wide', 'narrow', 'narrow', 'wide', 'narrow'];
+const ASPECT_PATTERN = ['16/11', '4/5', '4/5', '1/1', '16/11'];
+
+const collections = [
+  { label: 'Portraits',    href: '/photography/portraits',    blurb: 'A growing collection of portraits from various assignments.' },
+  { label: 'Documentary',  href: '/photography/documentary',  blurb: 'Documentary photography from ongoing projects.' },
+  { label: 'Street',       href: '/photography/street',       blurb: 'Observed on the street, mostly unposed.' },
+  { label: 'Commissioned', href: '/photography/commissioned', blurb: 'Editorial and corporate work.' },
+];
 ---
 <BaseLayout title="Photography — ontheground">
-  <main style="padding: 96px 48px; max-width: 1280px; margin: 0 auto;">
-    <span class="label">Placeholder · discipline</span>
-    <h1 class="ty-h1" style="margin-top: 16px;">
-      Photography<Dot />
-    </h1>
-    <p style="margin-top: 32px;">
-      <a class="navlink" href="/">← Back to home</a>
+  <SiteNav />
+
+  <section class="ph-hero">
+    <h1 class="ph-hero__h">Photography<Dot /></h1>
+    <p class="ph-hero__lead">
+      Stories told in light. A visual archive of work made in the field, in studios, and on assignment.
     </p>
-  </main>
+  </section>
+
+  <section class="ph-grid-section">
+    <div class="ph-grid">
+      {tiles.map((t, i) => {
+        const format = FORMAT_PATTERN[i % FORMAT_PATTERN.length];
+        const aspect = ASPECT_PATTERN[i % ASPECT_PATTERN.length];
+        return (
+          <a
+            href={t.href}
+            class:list={['ph-tile', `ph-tile--${format}`, `ph-tile--${t.kind}`]}
+            style={`aspect-ratio: ${aspect};`}
+            aria-label={t.kind === 'work' ? t.title : `${t.collectionLabel} collection`}
+          >
+            <img
+              src={t.image}
+              alt={t.title}
+              draggable="false"
+              data-photo-asset={t.kind === 'photo' ? '' : null}
+            />
+            <div class="ph-tile__overlay">
+              {t.kind === 'work' ? (
+                <span class="ph-tile__title">{t.title}<Dot /></span>
+              ) : (
+                <span class="ph-tile__collection">{t.collectionLabel}</span>
+              )}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="ph-collections">
+    <h2 class="ph-collections__h">Collections<Dot /></h2>
+    <ul class="ph-collections__list">
+      {collections.map((c) => (
+        <li class="ph-collections__row">
+          <a class="ph-collections__name" href={c.href}>{c.label}</a>
+          <span class="ph-collections__blurb"><em>{c.blurb}</em></span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <Footer />
 </BaseLayout>
+
+<style>
+  .ph-hero {
+    padding: 112px 64px 64px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .ph-hero__h {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+  }
+  .ph-hero__lead {
+    margin-top: 32px;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    color: var(--ink-2);
+    max-width: 56ch;
+  }
+
+  .ph-grid-section {
+    padding: 0 64px 96px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .ph-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: dense;
+    align-items: start;
+    gap: 24px;
+  }
+  .ph-tile {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--paper-3);
+    color: inherit;
+    cursor: pointer;
+  }
+  .ph-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
+  .ph-tile--narrow { grid-column: span 1; }
+  .ph-tile--wide   { grid-column: span 2; }
+  .ph-tile__overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 22px 22px 20px;
+    background: linear-gradient(
+      to top,
+      rgba(26, 23, 20, 0.72) 0%,
+      rgba(26, 23, 20, 0.32) 60%,
+      rgba(26, 23, 20, 0) 100%
+    );
+    color: var(--paper);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    pointer-events: none;
+  }
+  .ph-tile:hover .ph-tile__overlay,
+  .ph-tile:focus-visible .ph-tile__overlay {
+    opacity: 1;
+  }
+  .ph-tile__title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .ph-tile__collection {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xxs);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .ph-collections {
+    padding: 80px 64px 112px;
+    max-width: 1280px;
+    margin: 0 auto;
+    border-top: 1px solid var(--rule);
+  }
+  .ph-collections__h {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--fs-h3);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .ph-collections__list {
+    margin: 40px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ph-collections__row {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 32px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .ph-collections__row:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .ph-collections__name {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    transition: color 0.18s ease;
+  }
+  .ph-collections__name:hover,
+  .ph-collections__name:focus-visible {
+    color: var(--accent);
+  }
+  .ph-collections__blurb {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+  .ph-collections__blurb em {
+    font-style: italic;
+  }
+
+  @media (max-width: 720px) {
+    .ph-hero { padding: 64px 20px 48px; }
+    .ph-grid-section { padding: 0 20px 64px; }
+    .ph-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .ph-collections {
+      padding: 56px 20px 80px;
+    }
+    .ph-collections__list {
+      margin-top: 28px;
+    }
+    .ph-collections__row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 18px 0;
+    }
+  }
+</style>
+
+<script>
+  // Disable right-click + drag on photo-tiles (tiles linking to a collection).
+  document.querySelectorAll<HTMLElement>('.ph-tile--photo').forEach((el) => {
+    el.addEventListener('contextmenu', (e) => e.preventDefault());
+    el.addEventListener('dragstart', (e) => e.preventDefault());
+  });
+</script>

@@ -2,6 +2,7 @@
 title: "Stille avonden in de Pijp"
 slug: "stille-avonden"
 year: 2023
+discipline: "reportage"
 types: ["reportage"]
 client: "Volkskrant Magazine"
 excerpt: "An Amsterdam neighbourhood quietly tilting from buzz to silence, seen through four residents."

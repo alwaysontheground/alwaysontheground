@@ -2,6 +2,7 @@
 title: "The Kurds lose their last stretch of promised land"
 slug: "kurdish-promised-land"
 year: 2026
+discipline: "reportage"
 types: ["reportage"]
 client: "VRT"
 excerpt: "Northern Syria, where a Kurdish dream slowly folds in on itself."

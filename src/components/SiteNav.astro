@@ -1,8 +1,20 @@
 ---
 import Wordmark from './Wordmark.astro';
 
-const items = [
-  { label: 'Work',        href: '/work' },
+type NavLeaf = { label: string; href: string };
+type NavGroup = { label: string; children: NavLeaf[] };
+type NavItem = NavLeaf | NavGroup;
+
+const items: NavItem[] = [
+  {
+    label: 'Work',
+    children: [
+      { label: 'Reportage',   href: '/reportage' },
+      { label: 'Podcast',     href: '/podcast' },
+      { label: 'Documentary', href: '/documentary' },
+      { label: 'Photography', href: '/photography' },
+    ],
+  },
   { label: 'Field notes', href: '/field-notes' },
   { label: 'About',       href: '/about' },
   { label: 'Contact',     href: '/contact' },
@@ -10,9 +22,51 @@ const items = [
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => path === href || path.startsWith(href + '/');
+const isGroupActive = (children: NavLeaf[]) => children.some((c) => isActive(c.href));
+const isGroup = (item: NavItem): item is NavGroup => 'children' in item;
 ---
-<div
-  style="
+<div class="sitenav">
+  <Wordmark size={28} href="/" />
+  <nav class="sitenav__nav">
+    {items.map((it) => (
+      isGroup(it) ? (
+        <div class="nav-group" data-nav-group>
+          <a
+            class:list={['navlink', 'nav-trigger', isGroupActive(it.children) && 'navlink--active']}
+            role="button"
+            tabindex="0"
+            aria-expanded="false"
+            aria-haspopup="true"
+            data-nav-trigger
+          >
+            {it.label}
+          </a>
+          <div class="nav-dropdown" role="menu">
+            {it.children.map((c) => (
+              <a
+                href={c.href}
+                role="menuitem"
+                class:list={['navlink', 'nav-dropdown__item', isActive(c.href) && 'navlink--active']}
+              >
+                {c.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <a
+          href={it.href}
+          class:list={['navlink', isActive(it.href) && 'navlink--active']}
+        >
+          {it.label}
+        </a>
+      )
+    ))}
+  </nav>
+</div>
+
+<style>
+  .sitenav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -20,17 +74,112 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     padding: 22px 48px;
     border-bottom: 1px solid var(--rule);
     background: var(--paper);
-  "
->
-  <Wordmark size={28} href="/" />
-  <nav style="display: flex; gap: 36px;">
-    {items.map((it) => (
-      <a
-        href={it.href}
-        class:list={['navlink', isActive(it.href) && 'navlink--active']}
-      >
-        {it.label}
-      </a>
-    ))}
-  </nav>
-</div>
+  }
+  .sitenav__nav {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+  }
+
+  .nav-group {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .nav-trigger {
+    cursor: default;
+    user-select: none;
+  }
+  .nav-trigger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* Keep "Work" lit while the user is anywhere inside the group
+     (trigger, bridge, dropdown items) or while it's tap-opened. */
+  .nav-group:hover > .nav-trigger,
+  .nav-group:focus-within > .nav-trigger,
+  .nav-group[data-open="true"] > .nav-trigger {
+    color: var(--accent);
+  }
+
+  .nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 14px;
+    min-width: 180px;
+    padding: 12px 0;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    display: none;
+    flex-direction: column;
+    z-index: 20;
+  }
+  /* Bridge the gap between trigger and dropdown so hover doesn't break. */
+  .nav-dropdown::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    top: -14px;
+    height: 14px;
+  }
+  .nav-dropdown__item {
+    padding: 10px 20px;
+    white-space: nowrap;
+  }
+
+  /* Desktop / hover-capable: open on hover or keyboard focus. */
+  @media (hover: hover) and (pointer: fine) {
+    .nav-group:hover .nav-dropdown,
+    .nav-group:focus-within .nav-dropdown {
+      display: flex;
+    }
+  }
+  /* Tap-toggled (touch / mobile): JS sets data-open. */
+  .nav-group[data-open="true"] .nav-dropdown {
+    display: flex;
+  }
+</style>
+
+<script>
+  const groups = document.querySelectorAll<HTMLElement>('[data-nav-group]');
+
+  const setOpen = (group: HTMLElement, open: boolean) => {
+    group.dataset.open = open ? 'true' : 'false';
+    const trigger = group.querySelector<HTMLAnchorElement>('[data-nav-trigger]');
+    trigger?.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
+  groups.forEach((group) => {
+    const trigger = group.querySelector<HTMLAnchorElement>('[data-nav-trigger]');
+    if (!trigger) return;
+
+    const toggle = () => setOpen(group, group.dataset.open !== 'true');
+
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggle();
+    });
+    // <a> without href doesn't fire click on Enter/Space — handle manually.
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    groups.forEach((group) => {
+      if (!group.contains(e.target as Node)) setOpen(group, false);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    groups.forEach((group) => setOpen(group, false));
+  });
+</script>

@@ -9,12 +9,28 @@ const workTypes = z.enum([
   'commissioned',
 ]);
 
+const disciplines = z.enum([
+  'reportage',
+  'podcast',
+  'documentary',
+  'photography',
+]);
+
+const photographyGenres = z.enum([
+  'portrait',
+  'documentary',
+  'street',
+  'commissioned',
+]);
+
 const work = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/work' }),
   schema: z.object({
     title: z.string(),
     slug: z.string(),
     year: z.number(),
+    discipline: disciplines,
+    photographyGenre: photographyGenres.optional(),
     types: z.array(workTypes).min(1),
     client: z.string().optional(),
     excerpt: z.string(),
@@ -44,4 +60,18 @@ const fieldNotes = defineCollection({
   }),
 });
 
-export const collections = { work, fieldNotes };
+const photos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/photos' }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    genre: photographyGenres,
+    image: z.string(),
+    aspect: z.string().default('4/5'),
+    publishedAt: z.coerce.date(),
+    location: z.string().optional(),
+    caption: z.string().optional(),
+  }),
+});
+
+export const collections = { work, fieldNotes, photos };

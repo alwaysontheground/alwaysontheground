@@ -1,0 +1,224 @@
+---
+// Mounted once on any page that contains [data-lightbox-group].
+// Triggers: any [data-lightbox-src] element grouped by a [data-lightbox-group] ancestor.
+// Optional caption: data-lightbox-caption.
+---
+<div
+  class="lb"
+  data-lightbox
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image viewer"
+  hidden
+>
+  <button class="lb__close" type="button" aria-label="Close viewer">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <button class="lb__nav lb__prev" type="button" aria-label="Previous image">
+    <span aria-hidden="true">&lsaquo;</span>
+  </button>
+  <button class="lb__nav lb__next" type="button" aria-label="Next image">
+    <span aria-hidden="true">&rsaquo;</span>
+  </button>
+  <figure class="lb__stage">
+    <img class="lb__img" data-photo-asset alt="" draggable="false" />
+    <figcaption class="lb__cap" aria-live="polite"></figcaption>
+  </figure>
+</div>
+
+<style>
+  .lb {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 64px;
+  }
+  .lb[hidden] { display: none; }
+
+  .lb__stage {
+    margin: 0;
+    max-width: min(96vw, 1600px);
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .lb__img {
+    max-width: 100%;
+    max-height: calc(100vh - 160px);
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+    background: #000;
+  }
+  .lb__cap {
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xxs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    min-height: 14px;
+    opacity: 0.85;
+  }
+
+  .lb__close,
+  .lb__nav {
+    position: absolute;
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(245, 240, 230, 0.4);
+    color: var(--paper);
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 22px;
+    line-height: 1;
+    padding: 0;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .lb__close:hover,
+  .lb__nav:hover {
+    background: rgba(245, 240, 230, 0.12);
+    border-color: var(--paper);
+  }
+  .lb__close:focus-visible,
+  .lb__nav:focus-visible {
+    outline: 2px solid var(--paper);
+    outline-offset: 3px;
+  }
+  .lb__close { top: 24px; right: 24px; }
+  .lb__prev  { left: 24px;  top: 50%; transform: translateY(-50%); }
+  .lb__next  { right: 24px; top: 50%; transform: translateY(-50%); }
+
+  @media (max-width: 720px) {
+    .lb { padding: 16px; }
+    .lb__img { max-height: calc(100vh - 120px); }
+    .lb__close { top: 12px; right: 12px; }
+    .lb__prev  { left: 8px; }
+    .lb__next  { right: 8px; }
+  }
+</style>
+
+<script>
+  type Item = { src: string; caption: string; trigger: HTMLElement };
+
+  const lb = document.querySelector<HTMLElement>('[data-lightbox]');
+  if (lb) {
+    const imgEl = lb.querySelector<HTMLImageElement>('.lb__img')!;
+    const capEl = lb.querySelector<HTMLElement>('.lb__cap')!;
+    const closeBtn = lb.querySelector<HTMLButtonElement>('.lb__close')!;
+    const prevBtn = lb.querySelector<HTMLButtonElement>('.lb__prev')!;
+    const nextBtn = lb.querySelector<HTMLButtonElement>('.lb__next')!;
+
+    let items: Item[] = [];
+    let index = 0;
+    let lastFocus: HTMLElement | null = null;
+
+    const collect = (group: HTMLElement): Item[] => {
+      const triggers = group.querySelectorAll<HTMLElement>('[data-lightbox-src]');
+      return Array.from(triggers).map((t) => ({
+        src: t.dataset.lightboxSrc!,
+        caption: t.dataset.lightboxCaption ?? '',
+        trigger: t,
+      }));
+    };
+
+    const render = () => {
+      const it = items[index];
+      imgEl.src = it.src;
+      imgEl.alt = it.caption || 'Photograph';
+      capEl.textContent = it.caption;
+      const showNav = items.length > 1;
+      prevBtn.hidden = !showNav;
+      nextBtn.hidden = !showNav;
+    };
+
+    const open = (group: HTMLElement, startIndex: number) => {
+      items = collect(group);
+      if (items.length === 0) return;
+      index = startIndex;
+      lastFocus = (document.activeElement as HTMLElement) ?? null;
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+      render();
+      closeBtn.focus();
+    };
+
+    const close = () => {
+      lb.hidden = true;
+      document.body.style.overflow = '';
+      imgEl.removeAttribute('src');
+      lastFocus?.focus();
+    };
+
+    const next = () => { index = (index + 1) % items.length; render(); };
+    const prev = () => { index = (index - 1 + items.length) % items.length; render(); };
+
+    document.querySelectorAll<HTMLElement>('[data-lightbox-group]').forEach((group) => {
+      const triggers = group.querySelectorAll<HTMLElement>('[data-lightbox-src]');
+      triggers.forEach((t, i) => {
+        t.addEventListener('click', (e) => {
+          e.preventDefault();
+          open(group, i);
+        });
+        t.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            open(group, i);
+          }
+        });
+      });
+    });
+
+    closeBtn.addEventListener('click', close);
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+
+    lb.addEventListener('click', (e) => {
+      if (e.target === lb) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') {
+        close();
+        return;
+      }
+      if (e.key === 'ArrowRight') { next(); return; }
+      if (e.key === 'ArrowLeft')  { prev(); return; }
+      if (e.key === 'Tab') {
+        const focusables = Array.from(
+          lb.querySelectorAll<HTMLElement>('button:not([hidden])')
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last  = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-photo-asset]').forEach((el) => {
+      el.addEventListener('contextmenu', (e) => e.preventDefault());
+      el.addEventListener('dragstart', (e) => e.preventDefault());
+    });
+    imgEl.addEventListener('contextmenu', (e) => e.preventDefault());
+  }
+</script>

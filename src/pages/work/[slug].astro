@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteNav from '../../components/SiteNav.astro';
 import Footer from '../../components/Footer.astro';
 import Dot from '../../components/Dot.astro';
+import Lightbox from '../../components/Lightbox.astro';
 
 export async function getStaticPaths() {
   const all = await getCollection('work');
@@ -44,8 +45,22 @@ const metaLine = metaParts.join(' · ');
 
     <div class="dateline" style="margin-top: 28px;">{metaLine}</div>
 
-    <div class="photo" style="aspect-ratio: 16 / 9; margin-top: 56px;">
-      <img src={entry.data.hero} alt={entry.data.title} draggable="false" />
+    <div class="photo" style="aspect-ratio: 16 / 9; margin-top: 56px;" data-lightbox-group>
+      <button
+        type="button"
+        style="display: block; width: 100%; height: 100%; padding: 0; border: 0; background: transparent; cursor: pointer;"
+        data-lightbox-src={entry.data.hero}
+        data-lightbox-caption={entry.data.dateline ?? entry.data.title}
+        aria-label={`Open ${entry.data.title} in viewer`}
+      >
+        <img
+          src={entry.data.hero}
+          alt={entry.data.title}
+          draggable="false"
+          data-photo-asset
+          style="width: 100%; height: 100%; object-fit: cover;"
+        />
+      </button>
     </div>
 
     <p
@@ -59,6 +74,8 @@ const metaLine = metaParts.join(' · ');
       <Content />
     </div>
   </article>
+
+  <Lightbox />
 
   <Footer />
 </BaseLayout>
