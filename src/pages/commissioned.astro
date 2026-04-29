@@ -7,44 +7,22 @@ import Dot from '../components/Dot.astro';
 
 const allWork = await getCollection('work');
 const tiles = allWork
-  .filter((w) => w.data.types.includes('reportage'))
+  .filter((w) => w.data.types.includes('commissioned'))
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 
 const FORMAT_PATTERN = ['wide', 'narrow', 'narrow', 'wide', 'narrow'];
-
-const filters = [
-  { id: 'all', label: 'All' },
-  { id: 'text', label: 'Text', match: 'reportage' },
-  { id: 'audio', label: 'Audio', match: 'podcast' },
-  { id: 'video', label: 'Video', match: 'documentary' },
-];
 ---
-<BaseLayout title="Reportage — ontheground">
+<BaseLayout title="Commissioned — ontheground">
   <SiteNav />
 
   <section class="dp-hero">
-    <h1 class="dp-hero__h">Reportage<Dot /></h1>
+    <h1 class="dp-hero__h">Commissioned<Dot /></h1>
     <p class="dp-hero__lead">
-      Stories told in the field. Long-form journalism in text, audio and video — wherever the story takes shape.
+      Editorial and corporate work made on assignment — placeholder copy until Marcel writes the real intro.
     </p>
   </section>
 
   <section class="dp-grid-section">
-    <div class="dp-filters" role="tablist" aria-label="Filter by format">
-      {filters.map((f, i) => (
-        <button
-          type="button"
-          class:list={['dp-filter', i === 0 && 'is-active']}
-          data-filter={f.id}
-          data-match={f.match ?? ''}
-          role="tab"
-          aria-selected={i === 0 ? 'true' : 'false'}
-        >
-          {f.label}
-        </button>
-      ))}
-    </div>
-
     <div class="dp-grid">
       {tiles.map((w, i) => {
         const format = FORMAT_PATTERN[i % FORMAT_PATTERN.length];
@@ -53,7 +31,6 @@ const filters = [
             href={`/work/${w.data.slug}`}
             class:list={['dp-tile', `dp-tile--${format}`]}
             style={`aspect-ratio: ${w.data.imageAspect ?? '4/3'};`}
-            data-types={w.data.types.join(',')}
             aria-label={w.data.title}
           >
             <img
@@ -103,36 +80,6 @@ const filters = [
     margin: 0 auto;
   }
 
-  .dp-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 32px;
-  }
-  .dp-filter {
-    appearance: none;
-    background: transparent;
-    border: 1px solid var(--rule);
-    color: var(--ink-3);
-    font-family: var(--font-mono);
-    font-size: var(--fs-xxs);
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 10px 16px;
-    cursor: pointer;
-    transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
-  }
-  .dp-filter:hover {
-    color: var(--fg);
-    border-color: var(--ink-3);
-  }
-  .dp-filter.is-active {
-    color: var(--paper);
-    background: var(--fg);
-    border-color: var(--fg);
-  }
-
   .dp-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -148,10 +95,6 @@ const filters = [
     background: var(--paper-3);
     color: inherit;
     cursor: pointer;
-    transition: opacity 0.18s ease;
-  }
-  .dp-tile.is-hidden {
-    display: none;
   }
   .dp-tile img {
     width: 100%;
@@ -198,24 +141,3 @@ const filters = [
     }
   }
 </style>
-
-<script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>('.dp-filter');
-  const tiles = document.querySelectorAll<HTMLAnchorElement>('.dp-tile');
-
-  buttons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const match = btn.dataset.match ?? '';
-      buttons.forEach((b) => {
-        const active = b === btn;
-        b.classList.toggle('is-active', active);
-        b.setAttribute('aria-selected', active ? 'true' : 'false');
-      });
-      tiles.forEach((tile) => {
-        const types = (tile.dataset.types ?? '').split(',');
-        const visible = match === '' || types.includes(match);
-        tile.classList.toggle('is-hidden', !visible);
-      });
-    });
-  });
-</script>

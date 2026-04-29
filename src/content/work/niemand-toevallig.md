@@ -13,7 +13,7 @@ publishedAt: 2024-09-08
 homepage: true
 homepageOrder: 4
 homepageFormat: wide
-homepageImageAspect: "16/11"
+imageAspect: "16/11"
 gallery:
   - image: "https://picsum.photos/seed/otg-niemand-01/1600/1100?grayscale"
     aspect: "16/11"

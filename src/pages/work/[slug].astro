@@ -18,7 +18,9 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-const typesLabel = entry.data.types.map(cap).join(' · ');
+
+const ROUTED_TYPES = new Set(['documentary', 'podcast', 'photography', 'reportage', 'commissioned']);
+const hrefForType = (t: string) => (ROUTED_TYPES.has(t) ? `/${t}` : null);
 
 const metaParts: string[] = [];
 if (entry.data.dateline) metaParts.push(entry.data.dateline);
@@ -37,9 +39,22 @@ const ctaLabel = externalLinkLabel ?? 'Visit source';
   <SiteNav />
 
   <article class="proj">
-    <a class="navlink proj__back" href="/work">← Back to work</a>
-
-    <span class="label label--wide">{typesLabel}</span>
+    <span class="label label--wide proj__types">
+      {entry.data.types.map((t, i) => {
+        const href = hrefForType(t);
+        const labelText = cap(t);
+        return (
+          <>
+            {i > 0 && <span class="proj__types-sep"> · </span>}
+            {href ? (
+              <a class="proj__type-link" href={href}>{labelText}</a>
+            ) : (
+              <span>{labelText}</span>
+            )}
+          </>
+        );
+      })}
+    </span>
 
     {isPodcast ? (
       <>
@@ -180,11 +195,13 @@ const ctaLabel = externalLinkLabel ?? 'Visit source';
     margin: 0 auto;
     padding: 64px 64px 96px;
   }
-  .proj__back {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 40px;
+  .proj__type-link {
+    color: inherit;
+    transition: color 0.18s ease;
+  }
+  .proj__type-link:hover,
+  .proj__type-link:focus-visible {
+    color: var(--accent);
   }
   .proj__h {
     font-family: var(--font-sans);

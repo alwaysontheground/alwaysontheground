@@ -7,11 +7,10 @@ import Dot from '../components/Dot.astro';
 
 const allWork = await getCollection('work');
 const tiles = allWork
-  .filter((w) => w.data.discipline === 'documentary')
+  .filter((w) => w.data.types.includes('documentary'))
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 
 const FORMAT_PATTERN = ['wide', 'narrow', 'narrow', 'wide', 'narrow'];
-const ASPECT_PATTERN = ['16/11', '4/5', '4/5', '1/1', '16/11'];
 ---
 <BaseLayout title="Documentary — ontheground">
   <SiteNav />
@@ -27,12 +26,11 @@ const ASPECT_PATTERN = ['16/11', '4/5', '4/5', '1/1', '16/11'];
     <div class="dp-grid">
       {tiles.map((w, i) => {
         const format = FORMAT_PATTERN[i % FORMAT_PATTERN.length];
-        const aspect = ASPECT_PATTERN[i % ASPECT_PATTERN.length];
         return (
           <a
             href={`/work/${w.data.slug}`}
             class:list={['dp-tile', `dp-tile--${format}`]}
-            style={`aspect-ratio: ${aspect};`}
+            style={`aspect-ratio: ${w.data.imageAspect ?? '4/3'};`}
             aria-label={w.data.title}
           >
             <img

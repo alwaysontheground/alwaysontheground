@@ -13,7 +13,7 @@ homepage: true
 homepageOrder: 2
 homepageFormat: wide
 homepageImage: "/images/work/sound-of-broken-glass-poster.jpeg"
-homepageImageAspect: "3/4"
+imageAspect: "3/4"
 videoEmbed: "https://player.vimeo.com/video/76979871"
 externalLink: "https://cinetree.nl"
 externalLinkLabel: "Watch on Cinetree"

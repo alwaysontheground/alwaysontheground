@@ -12,5 +12,5 @@ publishedAt: 2023-05-19
 homepage: true
 homepageOrder: 5
 homepageFormat: wide
-homepageImageAspect: "16/11"
+imageAspect: "16/11"
 ---

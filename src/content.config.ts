@@ -42,7 +42,7 @@ const work = defineCollection({
     homepageImage: z.string().optional(),
     homepageOrder: z.number().optional(),
     homepageFormat: z.enum(['narrow', 'wide']).default('narrow'),
-    homepageImageAspect: z.string().default('16/11'),
+    imageAspect: z.string().default('16/11'),
     videoEmbed: z.string().optional(),
     externalLink: z.string().optional(),
     externalLinkLabel: z.string().optional(),

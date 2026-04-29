@@ -25,6 +25,7 @@ type LandingTile =
       title: string;
       image: string;
       href: string;
+      aspect: string;
       date: Date;
     }
   | {
@@ -33,17 +34,19 @@ type LandingTile =
       image: string;
       href: string;
       collectionLabel: string;
+      aspect: string;
       date: Date;
     };
 
 const allWork = await getCollection('work');
 const workTiles: LandingTile[] = allWork
-  .filter((w) => w.data.discipline === 'photography')
+  .filter((w) => w.data.types.includes('photography'))
   .map((w) => ({
     kind: 'work' as const,
     title: w.data.title,
     image: w.data.homepageImage ?? w.data.hero,
     href: `/work/${w.data.slug}`,
+    aspect: w.data.imageAspect ?? '4/3',
     date: w.data.publishedAt,
   }));
 
@@ -61,6 +64,7 @@ const photoTiles: LandingTile[] = (
       image: p.data.image,
       href: GENRE_TO_PATH[genre],
       collectionLabel: GENRE_TO_LABEL[genre],
+      aspect: p.data.aspect,
       date: p.data.publishedAt,
     }))
 );
@@ -70,7 +74,6 @@ const tiles: LandingTile[] = [...workTiles, ...photoTiles].sort(
 );
 
 const FORMAT_PATTERN = ['wide', 'narrow', 'narrow', 'wide', 'narrow'];
-const ASPECT_PATTERN = ['16/11', '4/5', '4/5', '1/1', '16/11'];
 
 const collections = [
   { label: 'Portraits',    href: '/photography/portraits',    blurb: 'A growing collection of portraits from various assignments.' },
@@ -93,12 +96,11 @@ const collections = [
     <div class="ph-grid">
       {tiles.map((t, i) => {
         const format = FORMAT_PATTERN[i % FORMAT_PATTERN.length];
-        const aspect = ASPECT_PATTERN[i % ASPECT_PATTERN.length];
         return (
           <a
             href={t.href}
             class:list={['ph-tile', `ph-tile--${format}`, `ph-tile--${t.kind}`]}
-            style={`aspect-ratio: ${aspect};`}
+            style={`aspect-ratio: ${t.aspect};`}
             aria-label={t.kind === 'work' ? t.title : `${t.collectionLabel} collection`}
           >
             <img

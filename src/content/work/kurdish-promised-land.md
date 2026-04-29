@@ -12,7 +12,7 @@ publishedAt: 2026-01-22
 homepage: true
 homepageOrder: 3
 homepageFormat: narrow
-homepageImageAspect: "16/11"
+imageAspect: "16/11"
 externalLink: "https://www.vrt.be/vrtnws/nl/"
 externalLinkLabel: "Read on VRT NWS"
 ---
