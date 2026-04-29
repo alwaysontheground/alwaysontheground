@@ -1,25 +1,13 @@
 ---
 import Wordmark from './Wordmark.astro';
 import Dot from './Dot.astro';
-
-const items = [
-  { label: 'Work',        href: '/work' },
-  { label: 'Field notes', href: '/field-notes' },
-  { label: 'About',       href: '/about' },
-  { label: 'Contact',     href: '/contact' },
-];
 ---
 <footer class="ft">
   <div class="ft-inner">
-    {/* Top row: brand + nav · newsletter */}
+    {/* Top row: wordmark · newsletter */}
     <div class="ft-top">
       <div class="ft-brand">
-        <Wordmark size={20} href="/" />
-        <nav class="ft-nav">
-          {items.map((x) => (
-            <a class="navlink" href={x.href}>{x.label}</a>
-          ))}
-        </nav>
+        <Wordmark size={26} href="/" />
       </div>
 
       <div class="ft-news">
@@ -28,7 +16,7 @@ const items = [
         </p>
         <form class="ft-news__form" onsubmit="event.preventDefault();">
           <input type="email" name="email" placeholder="your@email" required />
-          <button type="submit" class="btn btn--primary btn--sm">Subscribe</button>
+          <button type="submit" class="btn btn--primary">Subscribe</button>
         </form>
       </div>
     </div>
@@ -62,27 +50,21 @@ const items = [
 
   .ft-brand {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 14px 28px;
-  }
-  .ft-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
   }
 
   .ft-news {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 12px;
+    gap: 20px;
   }
   .ft-news__line {
     margin: 0;
     font-family: var(--font-sans);
     font-weight: 500;
-    font-size: 18px;
+    font-size: clamp(20px, 1.7vw, 22px);
+    line-height: 1.25;
     letter-spacing: -0.015em;
     color: var(--fg);
     text-align: right;
@@ -92,20 +74,20 @@ const items = [
     align-items: stretch;
     border: 1px solid var(--rule-strong);
     background: var(--paper);
-    width: 360px;
+    width: 420px;
     max-width: 100%;
   }
   .ft-news__form input {
     appearance: none;
     background: transparent;
     border: none;
-    padding: 10px 12px;
+    padding: 14px 16px;
     font-family: var(--font-serif);
-    font-size: 14px;
+    font-size: 15px;
     color: var(--fg);
     outline: none;
     flex: 1;
-    min-width: 180px;
+    min-width: 200px;
   }
   .ft-news__form .btn {
     border-radius: 0;
@@ -133,11 +115,6 @@ const items = [
       flex-direction: column;
       align-items: stretch;
       gap: 28px;
-    }
-    .ft-brand {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
     }
     .ft-news {
       align-items: stretch;
